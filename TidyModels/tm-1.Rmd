@@ -1,0 +1,97 @@
+---
+title: "Tidy Modeling in R - 1"
+output: 
+  html_document:
+    toc: yes
+    code_folding: show
+    theme:
+      bg: "#2F2957"
+      fg: "#9CFFE7"
+      primary: "#68FF1C"
+      secondary: "#8D9194"
+      base_font:
+        google: Lato
+      heading_font:
+        google: Lato
+      # bootswatch: 'minty'
+---
+
+```{r setup, include=FALSE}
+if (requireNamespace("thematic")) 
+  thematic::thematic_rmd(font = "auto")
+```
+
+
+      
+## Types of models
+
+Each model serves a particular purpose.
+
+- **Descriptive models**
+  - This model type is to describe or illustrate characteristics of some data.
+
+- **Inferential models**
+  - This model is to produce a decision for a research question or to explore a specific hypothesis
+  - inferential models start with some predefined conjecture or idea about a population and produces a statistical conclusion (an estimate or rejection)
+  - the null hypothesis vs the alternative hypothesis using a p-value as an indicator
+  
+- **Predictive models**
+  - using data to predict outcomes, a goal of having high consistency to the true value of the new data
+  - example: predict how many copies of a book should be shipped to a store, too many books is bad (waste of space & money) and too few (lost opportunity & profit)
+  - mechanistic model = makes a model that is dependent on assumptions
+  - empirical driven model = made with vague assumptions, machine learning KNN, where k=5 for example provide an estimate of book sales for new book based on 5 similar books
+  
+Ordinary linear regression models could fall into either type of models. Linear regression p-values and level of accuracy to weigh in on predictive capabilities warrants consideration.
+
+
+## Terminology 
+
+Models are *Supervised* or *Unsupervised*
+
+- **Unsupervised models** learn patterns, clustering or some characteristic to understand relationships between variables but no outcome. Examples = Principal Component Analysis (PCA), clustering, autoencoders
+
+- **Supervised models** have outcome variable, such as linear regression, neural networks and others
+  - 2 main sub categories: 
+    - *Regression* (predicts a numeric outcome) 
+    - *Classification* (predicts an outcome that is ordered/unordered set of qualitative values)
+
+
+- **Outcomes**  (Labels / dependent variables) are being predicted in Supervised models
+- **Predictors** (independent variables/ covariates) 
+
+- quantitative = integers etc
+- qualitative (nominal/ discrete) = scale 'red','blue','orange'
+
+
+
+## Data Cleaning
+
+Data cleaning is super important, is an iterative process.
+A cycle of import -> tidy -> transform <--> visualize <--> model -> communicate.
+
+- Exploratory Data Analysis (EDA) 
+- Feature Engineering = using knowledge from EDA to make specific model to predict based on data
+- Model tuning & selection, parameter tuning
+- Model Evaluation = assess model performance metrics, examine residual plots and conduct other EDA to understand how the model work.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
