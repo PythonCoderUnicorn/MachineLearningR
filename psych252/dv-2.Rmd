@@ -1,0 +1,191 @@
+---
+title: "Data Visuals - 2"
+output: 
+  html_document:
+    toc: yes
+    code_folding: show
+    theme:
+      bg: "#202123"
+      fg: "#B8BCC2"
+      primary: "#EA80FC"
+      base_font:
+        google: Ubuntu
+      heading_font:
+        google: Lato
+      version: 3
+---
+
+```{r setup, include=FALSE}
+if (requireNamespace("thematic")) 
+  thematic::thematic_rmd(font = "auto")
+```
+
+## Load libraries
+
+
+```{r, message=FALSE, warning=FALSE}
+# install.packages(c("gganimate", "gapminder", "ggridges", "devtools", "png", "gifski", "patchwork"))
+
+library("patchwork") # for making figure panels
+library("ggridges")  # for making joyplots 
+library("gganimate") # for making animations
+library("gapminder") # data available from Gapminder.org 
+library("tidyverse") 
+
+diamonds = diamonds
+```
+
+
+# stacked bar chart
+
+```{r, message=FALSE, warning=FALSE}
+ggplot(data = diamonds,
+       aes(x= cut,
+           fill = color)
+       )+
+  geom_bar()
+```
+
+
+
+
+# comparisons means & single data points
+
+```{r, message=FALSE, warning=FALSE}
+g = ggplot(
+  diamonds,
+  aes(x= color,
+      y = price)
+)
+
+g + 
+  stat_summary(fun.data = 'mean_cl_boot',
+               color= 'pink',
+               size= 1,
+               geom = 'pointrange',
+               shape= 21,
+               fill = 'black'
+               )
+
+g +
+  geom_point(color= 'orange',
+             size= 2,
+             alpha= 0.2,
+             position = position_jitter(width = 0.1, height = 0)
+             )
+```
+
+
+
+# Violins for bimodal distributions
+
+Violin plots are good when you have many data points and data is continuous. 
+```{r, message=FALSE, warning=FALSE}
+
+ggplot(
+  diamonds,
+  aes(x= color, 
+      y = price,
+      fill= color)
+)+
+  geom_violin()
+```
+
+
+
+# Density ridges
+
+```{r, message=FALSE, warning=FALSE}
+
+ggplot(
+  diamonds,
+  aes(x= price, 
+      y = color,
+      fill= color)
+)+
+  ggridges::geom_density_ridges()
+
+```
+
+
+
+# Scatterplot
+
+Scatterplot are good for lookiing at the relationship beyween 2 continuos variables
+```{r, message=FALSE, warning=FALSE}
+
+ggplot(
+  diamonds,
+  aes(x = carat,
+      y= price,
+      color= color)
+)+
+  geom_point()
+```
+
+
+# Raster plots
+
+Raster plots are useful for looking how a variable of interest
+varies as a function of 2 other variables. 
+
+Example: `carat` values differ from `color` and `clarity`.
+
+```{r, message=FALSE, warning=FALSE}
+ggplot(
+  diamonds,
+  aes(x= color,
+      y= clarity,
+      z = carat)
+)+
+  stat_summary2d(fun= 'mean', geom='tile')+
+  scale_fill_gradient(low = 'purple' , high = 'yellow')
+```
+
+
+
+# Temporal data
+
+Line plots are best for temporal data
+
+```{r, message=FALSE, warning=FALSE}
+
+texas = ggplot2::txhousing
+
+texas = texas %>% 
+  filter(city %in% c("Dallas", "Fort Worth", "San Antonio", "Houston")) %>% 
+  mutate(city = factor(city, levels = c("Dallas", "Houston", "San Antonio", "Fort Worth") ) )
+
+ggplot(
+  texas,
+  aes(x= year,
+      y= median,
+      color= city,
+      fill= city)
+)+
+  # stat_summary(fun.data = 'mean_cl_boot',
+  #              geom= 'ribbon',
+  #              alpha= 0.2,
+  #              linetype= 0
+  #              )+
+  stat_summary(fun='mean', geom = 'line')+
+  stat_summary(fun='mean', geom = 'point')
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
