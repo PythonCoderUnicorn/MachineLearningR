@@ -1,0 +1,251 @@
+---
+title: "Tidy Modeling in R - 3"
+output: 
+  html_document:
+    toc: yes
+    code_folding: show
+    theme:
+      bg: "#2F2957"
+      fg: "#9CFFE7"
+      primary: "#68FF1C"
+      secondary: "#8D9194"
+      base_font:
+        google: Lato
+      heading_font:
+        google: Lato
+      # bootswatch: 'minty'
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+if (requireNamespace("thematic")) 
+  thematic::thematic_rmd(font = "auto")
+```
+
+
+      
+## R Modeling Fundamentals
+
+An example of some fundamentals for modeling in R, using data about crickets (2 species: *O.exclamationis* and *O.niveus*), and the relationship between ambient temperature and the rate of of cricket chirps per minute. Crickets data has 31 rows and 3 columns.
+
+```{r crickets, message=FALSE, warning=FALSE}
+library(tidyverse)
+
+# install.packages("modeldata")
+
+# load the data into environment
+data(crickets, package = 'modeldata')
+
+# column names of the crickets dataset
+names(crickets)
+
+```
+
+### Plot data
+
+Plot the relationship between temperature between species and rate of cricket chirps.
+
+```{r}
+library(paletteer)
+
+ggplot(
+  data = crickets,
+  aes(
+    x = temp,
+    y = rate,
+    color = species,
+    pch = species,
+    lty = species
+  )
+)+
+  geom_point(size = 2)+
+  # simple linear regression model, fit for each species
+  geom_smooth(method= lm, formula = NULL, se= FALSE, alpha= 0.5) +
+  labs(
+    title = "Crickets: rate of chirps & temperature",
+    x = "Temp (C)", 
+    y = "Chirp Rate (per minute)"
+  ) +
+  scale_color_paletteer_d(`"awtools::ppalette"`)
+```
+
+geom_smooth() arguments:
+
+  - method =`c('lm','glm','gam','loess')`
+  - formula = `y ~ x`
+  - `se` = display the confidence interval around smooth T/F
+
+
+The linear regression shows that given temperature the *O.exclamationis* chirps more per minute than the other cricket species. 
+
+A linear regression model (`lm()`) arguments for this function are a) a dataframe and b) model formula.
+Formula such as `rate ~ temp` which states the chirp **rate** is the *outcome* and the **temperature** value is the *predictor*. If time were a column in the data then the formula could look like `rate ~ temp + time`, meaning that `temp` and `time` together are the predictors. 
+
+
+Predictors must be quantitative variables. In order for `rate ~ temp + species` to work, need to use dummy variables. Species in this data has 2 values, can be `0` = "O.exclamationis" and `1` = "O.niveus". In order to prevent issues with the y-intercept and slope for each species, we add an *interaction term*.
+To expand all factors to include all possible interactions `rate ~ temp * species`.
+
+
+Can use in-line functions inside the formula, `rate ~ log(temp)` or `rate ~ I( (temp * 9/5) + 32)` to convert temperature to Celsius. 
+
+```{r}
+interaction_fit = lm( rate ~ (temp + species)^2, data = crickets)
+interaction_fit
+```
+
+**residual** is the vertical distance from the line of best fit a data point is
+
+```{r}
+# Have 2 plots next to each other 
+par(mfrow = c(1, 2))
+
+# show residuals vs predicted values
+plot(interaction_fit, which = 1)
+```
+
+Assess if the inclusion of the interaction term in necessary, using the `anova()` method.
+
+```{r}
+formula = rate ~ temp + species
+
+main_effect_fit = lm(formula, data = crickets)
+
+# compare the 2
+anova(main_effect_fit, interaction_fit)
+
+```
+The p-value is 0.25, which implies that there is a lack of evidence against null hypothesis, the interaction term is not needed by the model. 
+
+Residual plots should be re-assessed to make sure that our theoretical assumptions are valid enough to trust the p-values produced by the model.
+
+Use the `summary()` function to inspect the model
+
+```{r}
+summary(main_effect_fit)
+```
+
+The estimated chirp rate for each species increases by 3.60275 (3.6) chirps as the temperature increases by a single degree. The p-value is statistically significant for this term -10.065 (-10.7), meaning that the species *O.niveus* chirps about 10 fewer chirps per minute compares to the other cricket species. 
+
+If we needed to estimate the chirp rate at a temperature that was not observed in the experiment, we could use the predict() method. 
+
+Let's predict the chirp rate for *O.exclamationis* for temperatures between 15 C and 20 C.
+
+```{r}
+new_values = data.frame(
+  species = "O. exclamationis",
+  temp = 15:20
+)
+
+predict(main_effect_fit, newdata = new_values)
+
+```
+
+## Tidy Models format
+
+Tidy Model format style 2 ways of plotting data
+```{}
+plot(plot_data$x , plot_data$y)
+
+# 1
+library(lattice)
+xyplot( y ~ x, data= plot_data)
+
+# 2
+library(ggplot2)
+ggplot(plot_data, aes(x= x, y= y)) + geom_point()
+```
+
+If modeling has an outcome with 2 classes, there are a variety of models to use, and to use `predict()`
+
+### modeling functions
+
+| function       | Pkg        | Code                                        |
+| :------------- | :--------- | :------------------------------------------ |
+| `lda()`        | MASS       | predict(object)                             |
+| `glm()`        | stats      | predict(object, type='response')            |
+| `gbm()`        | gbm        | predict(object, type = “response”, n.trees) |
+| `mda()`        | mda        | predict(object, type = “posterior”)         |
+| `rpart()`      | rpart      | predict(object, type = “prob”)              |
+| various        | RWeka      | predict(object, type = “probability”)       |
+| `logitboost()` | LogitBoost | predict(object, type = “raw”, nIter)        |
+| `pamr.train()` | pamr       | pamr.predict(object, type = “posterior”)    |
+
+
+
+### Handle missing values
+
+Data that has missing values will cause errors when making predictions
+```{r}
+# add missing value
+new_values$temp[1] = NA
+
+# simply omit the missing value, now 5 rows NOT 6
+predict(main_effect_fit, newdata = new_values, na.action = na.omit)
+```
+
+### Correlation example
+
+In an example of predictors being used to screen basedon their correlation to the outcome column. 
+
+```{r}
+corr_res = map(mtcars %>% select(-mpg), cor.test, y= mtcars$mpg)
+
+corr_res[[1]]
+
+
+# use the broom library to return a tibble
+library(broom)
+
+tidy( corr_res[[1]] )
+```
+
+
+Plot it
+```{r}
+corr_res %>% 
+  # map to a tidy dataframe
+  map_dfr(tidy, .id = 'predictor') %>% 
+  ggplot( aes(x = fct_reorder(predictor, estimate))) +
+  geom_point( aes(y= estimate))+
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high), width = .1) +
+  labs(x = NULL, y = "Correlation with mpg")
+```
+
+
+
+### Split data
+
+```{r}
+split_by_species = crickets %>% 
+  group_nest(species)
+
+# data column has the `rate` and `temp` columns
+split_by_species
+
+```
+
+### Model by species
+
+```{r}
+# purrr::map()
+model_by_species = 
+  split_by_species %>% 
+  mutate(model = map(data, ~ lm(rate ~ temp, data = .x)))
+
+model_by_species %>% 
+  mutate(coef = map(model, tidy)) %>% 
+  select(species, coef) %>% 
+  unnest(cols = c(coef))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
