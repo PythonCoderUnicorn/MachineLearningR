@@ -1,0 +1,43 @@
+---
+title: "Tidy Modeling in R - 2"
+output: 
+  html_document:
+    toc: yes
+    code_folding: show
+    theme:
+      bg: "#2F2957"
+      fg: "#9CFFE7"
+      primary: "#68FF1C"
+      secondary: "#8D9194"
+      base_font:
+        google: Lato
+      heading_font:
+        google: Lato
+      # bootswatch: 'minty'
+---
+
+```{r setup, include=FALSE}
+if (requireNamespace("thematic")) 
+  thematic::thematic_rmd(font = "auto")
+```
+
+
+      
+## Types of models
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
