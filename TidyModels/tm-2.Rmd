@@ -16,14 +16,125 @@ output:
       # bootswatch: 'minty'
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 if (requireNamespace("thematic")) 
   thematic::thematic_rmd(font = "auto")
 ```
 
 
       
-## Types of models
+## Tidyverse Principles
+
+Use the magrittr ( %>% ) 
+
+```{r message=FALSE, warning=FALSE}
+library(dplyr)
+# head(mtcars)
+
+small_mtcars = dplyr::slice( dplyr::arrange(mtcars, gear))
+small_mtcars
+
+# more compact way
+small_mtcars = slice(arrange(mtcars, gear), 1:10)
+small_mtcars
+```
+
+## Functional Programming 
+
+Functional programming to iterate over an operation. 
+
+Example: logarithm of the ratio of the fuel efficiency to the car weight
+
+```{r}
+# instead of a for loop function
+
+ratios = log(mtcars$mpg / mtcars$wt)
+ratios
+```
+
+A good approach is to use functions that the output only depends on the inputs and the function has no side effects. Use the `purrr` package for iterative programming.
+
+```{r, message=FALSE, warning=FALSE}
+library(purrr)
+
+
+# the map() function operates on vectors and returns vectors 
+# map(vector, function)
+
+# get the square root of mtcars MPG column, showing only 3 rows
+map( head(mtcars$mpg, 3), sqrt)
+```
+Can use anonymous functions inside map functions
+```{r}
+map2_dbl(mtcars$mpg, mtcars$wt, ~ log(.x / .y)) %>% head()
+```
+
+
+## Tibbles vs Dataframes
+
+Tibbles are more flexible dataframes but also restrictive in the sense that you can't perform some operations which is to prevent serious errors.
+
+```{r}
+tbbl = tibble(
+  `variable 1` = 1:2, 
+  two = 3:4
+  )
+tbbl
+
+
+tbbl[ , 2] # or tbbl[ , 'two']
+```
+
+# Tidyverse Example 
+
+The dataset is city of Chicago data portal of daily ridership for the city's elevated train stations. This data has 1,088,958 rows and 5 columns.
+
+- station id (numeric)
+- station name (char)
+- date (char mm/dd/yyyy)
+- day of week (char)
+- number of riders (numeric)
+
+When making a new column name, format is `new_name` = `old_name`
+
+```{r Example, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(lubridate)
+
+# read in the Chicago Train data
+# url = "http://bit.ly/raw-train-data-csv"
+
+# write to CSV to save data
+# write_csv(all_stations, file = "data/ChicagoTrains.csv")
+
+all_stations = read_csv("data/ChicagoTrains.csv")
+
+glimpse(all_stations)
+```
+
+## Select, mutate, group
+
+```{r}
+
+all_stations = all_stations %>% 
+  # filter the columns and rename stationname
+  dplyr::select(station = stationname, date, rides) %>% 
+  # convert dates into date objects
+  # convert rides to unit of 1k rides
+  dplyr::mutate(date = lubridate::mdy(date), rides = rides/ 1000) %>% 
+  # group date and station
+  dplyr::group_by(date, station) %>% 
+  # summarize the records using the max()
+  # .groups = 'drop' drops 2 unused columns station_id and daytype
+  summarize(rides = max(rides), .groups = 'drop')
+```
+
+
+
+
+
+
+
 
 
 
