@@ -1,0 +1,79 @@
+---
+title: "Stats & Probability"
+output: 
+  html_document:
+    toc: yes
+    code_folding: show
+    theme:
+      bg: "#202123"
+      fg: "#c8cbd0" # grey
+      primary: "#00b36b"  # pink "#EA80FC" 
+      base_font:
+        google: Ubuntu
+      heading_font:
+        google: Ubuntu
+      version: 3
+---
+
+Material is lessons from Khan Academy, to refresh my memory and skills.
+
+```{r setup, include=FALSE}
+if (requireNamespace("thematic")) 
+  thematic::thematic_rmd(font = "auto")
+```
+
+```{r, warning=FALSE, message=FALSE ,echo=FALSE}
+library(tidyverse)
+library(ggvenn)
+```
+
+
+
+## Frequency Tables & Venn diagrams
+
+```{r}
+# library(ggvenn)
+
+circles = list('Bajor' = c(6,3), 'Cardassia' = c(1,3))
+
+ggvenn(circles, set_name_color = 'white', 
+       show_elements = T,
+       text_color = 'white')
+```
+
+- 6 people are Bajoran and not Cardassian 
+- 3 people are both Bajoran and Cardassian
+- 1 person is Cardassian and not Bajoran
+
+
+```{r echo=FALSE}
+tribble(
+  ~' ',~'Bajoran', ~'Cardassian',~'total',
+  'Cardassian', 3, 6, 9,
+  'Bajoran', 1, 2, 3,
+  'total', 4, 8, 12
+)
+
+```
+
+
+
+## Two way frequency table
+
+| .                | Type A          | Type B           | total |     |
+| :--------------- | :-------------- | :--------------- | :---- | :-- |
+| Pos X            | 28              | 35               | 60    |     |
+| Neg X            | 97              | 104              | 201   |     |
+| ---- total ----  | = 125           | = 139            |       |     |
+| Proportion Pos X | 28 / 125 = 0.22 | 35 / 139 = 0.25  |       |     |
+| Proportion Neg X | 97 / 125 = 0.78 | 104 / 139 = 0.75 |       |     |   
+
+
+# Descriptive Stats
+
+
+
+
+
+
+
