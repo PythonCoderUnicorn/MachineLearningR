@@ -1,0 +1,94 @@
+---
+title: "Data Visuals - 3"
+output: 
+  html_document:
+    toc: yes
+    code_folding: show
+    theme:
+      bg: "#202123"
+      fg: "#B8BCC2"
+      primary: "#EA80FC"
+      base_font:
+        google: Ubuntu
+      heading_font:
+        google: Lato
+      version: 3
+---
+
+```{r setup, include=FALSE}
+if (requireNamespace("thematic")) 
+  thematic::thematic_rmd(font = "auto")
+```
+
+## Load libraries
+
+
+```{r, message=FALSE, warning=FALSE}
+# install.packages(c("gganimate", "gapminder", "ggridges", "devtools", "png", "gifski", "patchwork"))
+
+library("patchwork") # for making figure panels
+library("ggridges")  # for making joyplots 
+library("gganimate") # for making animations
+library("gapminder") # data available from Gapminder.org 
+library("tidyverse") 
+
+diamonds = diamonds
+starwars = starwars
+```
+
+
+```{r}
+skimr::skim(starwars)
+```
+
+ Move species column to the beginning
+```{r}
+starwars %>% 
+  relocate(species, everything())
+```
+
+select columns based on data type using the `where()`
+
+```{r}
+starwars %>% 
+  # fn selects the columns that are numeric
+  select(where(fn = is.numeric))
+
+# creating an anonymous function
+starwars %>% 
+  select(where(function(x) !is.numeric(x)))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

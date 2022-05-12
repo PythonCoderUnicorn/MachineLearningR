@@ -1,0 +1,62 @@
+---
+title: "Linear Models 1"
+output: 
+  html_document:
+    toc: yes
+    code_folding: show
+    theme:
+      bg: "#202123"
+      fg: "#B8BCC2"
+      primary: "#EA80FC"
+      base_font:
+        google: Ubuntu
+      heading_font:
+        google: Lato
+      version: 3
+---
+
+```{r setup, include=FALSE}
+if (requireNamespace("thematic")) 
+  thematic::thematic_rmd(font = "auto")
+```
+
+## Load libraries
+
+
+```{r, message=FALSE, warning=FALSE}
+# install.packages(c("gganimate", "gapminder", "ggridges", "devtools", "png", "gifski", "patchwork"))
+
+library("knitr")      # for knitting RMarkdown 
+library("kableExtra") # for making nice tables
+library("janitor")    # for cleaning column names
+library("broom")      # for tidying up linear models 
+library("tidyverse") 
+
+diamonds = diamonds
+starwars = starwars
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
