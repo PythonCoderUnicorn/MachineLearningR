@@ -149,14 +149,107 @@ IQR
 
 ## Range, Variance & STD
 
-```{r}
+Range (max - min) is the measure of dispersion, how far away from the mean (average) a data point is.
 
+Variance $\sigma^2$  
+
+Standard Deviation $\sigma$ (the sqrt( variance))
+
+```{r}
+p1 = c(-10,0,10,20,30)
+p2 = c(8,9,10,11,12)
+
+# mean(p1) #= 10
+# mean(p2) #= 10
+
+# return the max and min for vector
+range1 = range(p1)
+# subtract the range elements to get range
+range1 = range1[2]- range1[1] #= 40
+
+range2 = range(p2)
+range2 = range2[2] - range2[1] #= 4
+
+# variance for p1 vector, (elements - mean)^2
+v1 = (-10 - 10)^2 + (0-10)^2 + (10-10)^2 +(20-10)^2 +(30-10)^2
+variance1 = v1 / length(p1)
+
+# variance for p2 vector
+v2 = (p2[1] - 10)^2 + (p2[2]-10)^2 + (p2[3]-10)^2 +(p2[4]-10)^2 +(p2[5]-10)^2
+variance2 = v2 / length(p2)
+
+
+# standard deviation, sqrt( variance )
+
+std1 = sqrt(variance1)
+std2 = sqrt(variance2)
 ```
 
 
 
+## Population mean & variance
+
+Population mean $\mu$ and variance $\sigma^2$ measures the dispersion
+
+```{r}
+# vector of population
+pop = c(4,4.2,5,4.3,5.5)
+
+# length(pop)
+
+# population mean
+pop_mean = mean(pop)
+
+# variance
+variance = function(v, pop_mean){
+  v2 = (v[1] - pop_mean)^2 + (v[2]-pop_mean)^2 + (v[3]-pop_mean)^2 +
+    (v[4]-pop_mean)^2 + (v[5]-pop_mean)^2
+  
+  variance2 = v2 / length(v)
+  print(variance2)
+}
+
+variance(pop, pop_mean)
+
+# standard deviation
+print( sqrt( variance(pop, pop_mean) ) )
+
+sd(pop)
+```
+
+```{r}
+c = c(35,50,50,50,56,60,60,75,250)
+
+length(c)
+m = mean(c)
+m
+median(c)
+range(c)
+
+# ----- IQR
+c1 = c(35,50,50,50)
+cm1 = median(c1)
+c2 = c(60,60,75,250)
+cm2 = median(c2)
+
+glue::glue('IQR: ',cm2 - cm1)
 
 
+variance = function(v, pop_mean){
+  v2 = (v[1] - pop_mean)^2 + (v[2]-pop_mean)^2 + (v[3]-pop_mean)^2 +
+    (v[4]-pop_mean)^2 + (v[5]-pop_mean)^2 + (v[6]-pop_mean)^2 + 
+    (v[7]-pop_mean)^2 + (v[8]-pop_mean)^2 + (v[9]-pop_mean)^2
+  
+  variance2 = v2 / length(v)
+  print(variance2)
+}
+
+# variance(c, m)
+
+# std
+sqrt( variance(c, m) )
+```
+the mean is skewed due to the 250 datapoint so the median is better for central tendency
 
 
 

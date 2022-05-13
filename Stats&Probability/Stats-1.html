@@ -446,6 +446,10 @@ diagrams</a></li>
 Stats</a>
 <ul>
 <li><a href="#iqr" id="toc-iqr">IQR</a></li>
+<li><a href="#range-variance-std" id="toc-range-variance-std">Range,
+Variance &amp; STD</a></li>
+<li><a href="#population-mean-variance" id="toc-population-mean-variance">Population mean &amp;
+variance</a></li>
 </ul></li>
 </ul>
 </div>
@@ -556,8 +560,99 @@ paste(&quot; mean with lowest value: &quot;,mean(v))</code></pre>
 <p>3 unemployed pull avg left but median will be &gt; mean</p>
 <p>x points, remove 1 lowest value , the median move to the right, mean
 goes up</p>
+<pre><code>dots
+  1   2  3  1  2     1
+|-|-|-|--|--|--|--|--|-|-
+6 7 8 9 10 11 12 13  14  distribution</code></pre>
 <div id="iqr" class="section level2">
 <h2>IQR</h2>
+<p>Interquartile range is the amount of spread in the middle %50 percent
+of a dataset.</p>
+<pre class="r"><code>x = c(16,24,26,26,26,27,28)
+# median       ^
+
+median(x)</code></pre>
+<pre><code>## [1] 26</code></pre>
+<pre class="r"><code># mean(x)
+# max(x)
+# min(x) 
+range = max(x) - min(x)
+
+# break into quartiles Q1 (25%)
+x1 = c(16,24,26)
+q1 = median(x1)
+
+# Quartile 3 (75%)
+x3 = c(26,27,28)
+q3 = median(x3)
+
+IQR = q3 - q1
+IQR</code></pre>
+<pre><code>## [1] 3</code></pre>
+</div>
+<div id="range-variance-std" class="section level2">
+<h2>Range, Variance &amp; STD</h2>
+<p>Range (max - min) is the measure of dispersion, how far away from the
+mean (average) a data point is.</p>
+<p>Variance <span class="math inline">\(\sigma^2\)</span></p>
+<p>Standard Deviation <span class="math inline">\(\sigma\)</span> (the
+sqrt( variance))</p>
+<pre class="r"><code>p1 = c(-10,0,10,20,30)
+p2 = c(8,9,10,11,12)
+
+# mean(p1) #= 10
+# mean(p2) #= 10
+
+# return the max and min for vector
+range1 = range(p1)
+# subtract the range elements to get range
+range1 = range1[2]- range1[1] #= 40
+
+range2 = range(p2)
+range2 = range2[2] - range2[1] #= 4
+
+# variance for p1 vector, (elements - mean)^2
+v1 = (-10 - 10)^2 + (0-10)^2 + (10-10)^2 +(20-10)^2 +(30-10)^2
+variance1 = v1 / length(p1)
+
+# variance for p2 vector
+v2 = (p2[1] - 10)^2 + (p2[2]-10)^2 + (p2[3]-10)^2 +(p2[4]-10)^2 +(p2[5]-10)^2
+variance2 = v2 / length(p2)
+
+
+# standard deviation, sqrt( variance )
+
+std1 = sqrt(variance1)
+std2 = sqrt(variance2)</code></pre>
+</div>
+<div id="population-mean-variance" class="section level2">
+<h2>Population mean &amp; variance</h2>
+<p>Population mean <span class="math inline">\(\mu\)</span> and variance
+<span class="math inline">\(\sigma^2\)</span> measures the
+dispersion</p>
+<pre class="r"><code># vector of population
+pop = c(4,4.2,5,4.3,5.5)
+
+# length(pop)
+
+# population mean
+pop_mean = mean(pop)
+
+# variance
+variance = function(v, pop_mean){
+  v2 = (v[1] - pop_mean)^2 + (v[2]-pop_mean)^2 + (v[3]-pop_mean)^2 +
+    (v[4]-pop_mean)^2 + (v[5]-pop_mean)^2
+  
+  variance2 = v2 / length(v)
+  print(variance2)
+}
+
+variance(pop, pop_mean)</code></pre>
+<pre><code>## [1] 0.316</code></pre>
+<pre class="r"><code># standard deviation
+print( sqrt( variance(pop, pop_mean) ) )</code></pre>
+<pre><code>## [1] 0.316
+## [1] 0.5621388</code></pre>
 </div>
 </div>
 
