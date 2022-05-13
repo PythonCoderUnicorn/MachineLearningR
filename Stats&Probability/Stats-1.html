@@ -443,7 +443,10 @@ pre code {
 diagrams</a></li>
 <li><a href="#two-way-frequency-table" id="toc-two-way-frequency-table">Two way frequency table</a></li>
 <li><a href="#descriptive-stats" id="toc-descriptive-stats">Descriptive
-Stats</a></li>
+Stats</a>
+<ul>
+<li><a href="#iqr" id="toc-iqr">IQR</a></li>
+</ul></li>
 </ul>
 </div>
 
@@ -524,6 +527,38 @@ ggvenn(circles, set_name_color = &#39;white&#39;,
 </div>
 <div id="descriptive-stats" class="section level1">
 <h1>Descriptive Stats</h1>
+<p>Average = mean. Median = middle. Mode = most common number</p>
+<pre class="r"><code>a = c(1,2,4,6,4)
+
+sort(a)</code></pre>
+<pre><code>## [1] 1 2 4 4 6</code></pre>
+<pre class="r"><code>total = sum(a)
+n = length(a)
+
+# avg = total/n
+paste(&quot;the avg &quot;, mean(a))</code></pre>
+<pre><code>## [1] &quot;the avg  3.4&quot;</code></pre>
+<pre class="r"><code>paste(&quot;the middle&quot;, median(a))</code></pre>
+<pre><code>## [1] &quot;the middle 4&quot;</code></pre>
+<pre class="r"><code># mode(a)</code></pre>
+<pre class="r"><code>x = c(0,2,4,12,12,5,6,19)
+mean(x)</code></pre>
+<pre><code>## [1] 7.5</code></pre>
+<pre class="r"><code>v = c(80,90,92,94,96)
+v2 = c(90,92,94,96)
+
+paste(&quot; mean with lowest value: &quot;,mean(v))</code></pre>
+<pre><code>## [1] &quot; mean with lowest value:  90.4&quot;</code></pre>
+<pre class="r"><code>paste(&quot; mean without lowest value: &quot;,mean(v2))</code></pre>
+<pre><code>## [1] &quot; mean without lowest value:  93&quot;</code></pre>
+<p>athlete pulls avg to the right but median will be &lt; mean</p>
+<p>3 people make same money 50+50+50/3 =50 median = 50</p>
+<p>3 unemployed pull avg left but median will be &gt; mean</p>
+<p>x points, remove 1 lowest value , the median move to the right, mean
+goes up</p>
+<div id="iqr" class="section level2">
+<h2>IQR</h2>
+</div>
 </div>
 
 
