@@ -542,6 +542,7 @@ paste('z score: ', round(z_score,2), 'std from the mean')
 
 If the data is normally distributed, then 71.5% of the values would be below 0.57. The proportion is 0.7157.
 
+## school test example
 
 ```{r}
 mean = 40
@@ -563,8 +564,103 @@ z_table = 0.9938
 paste('proportion higher than data point: ', round(1 - z_table, 4) )
 ```
 
+## prices between range example
+
+data points prices between 624:768
+```{r}
+mean = 16.3
+std = 2
+data_point = 14.9 # 12.9 ,14.9
+
+# z_pos = mean + std
+# z_neg = mean - std 
+
+# what proportion is lower than data point?
+z_score = (data_point - mean) / std
+paste('z score: ', round(z_score,4), 'std from the mean')
+
+#---- look at Z TABLE -----
+# proportion LESS than data point
+# z_table = 0.10565
 
 
+# >>>>>>>>>>>>>>>>>
+# proportion that scores MORE than data point
+paste('proportion higher than data point: ', round(1 - z_table, 4) )
+
+# -----------
+# proportion of prices between range 
+
+# z score for data point 1 = -1.7   -->> look at z-table
+z_1 = 0.04457
+
+# z score for data point 2 = -0.7
+z_2 = 0.242
+glue::glue(' proportion between range: {(z_2 - z_1)*100}%')
+# glue::glue(' proportion between range :: {(z_1 - z_2)*100}%')
+```
+
+
+
+
+## z-table reverse example
+
+```{r}
+mean = 85
+std = 29
+
+# z_pos = mean + std
+# z_neg = mean - std
+
+#>>>>>>>>>>> no data point given
+# use z table in reverse, use x % to find z-score
+
+#  EX.: looking for scores < 25%
+#  read z-table from INSIDE TABLE then outward, 
+#  find closest value  == 0.24825
+# >>>>>>>>>>>>
+
+#  x% =  10 top >> 0.1   1 - 0.1 = .90
+z_score = 1.29
+
+
+# mean + 0.53 * 9
+rate = mean + z_score * std 
+rate 
+
+paste('rate for (%): ', ceiling(rate))
+```
+
+
+## Empiracal rule
+
+rule **68-95-99.9**
+
+- 68% of data is within 1 std of the mean
+- 95% of data is within 2 std of the mean
+- 99.9% of data is within 3 std of the mean
+
+```{r}
+mean = 9.5
+std = 11
+
+z_pos = mean + std
+z_neg = mean - std
+glue::glue('| z {z_neg} --- z +{z_pos} |')
+
+#>>>> no data point given
+# rates in the top 30%, so need to 100-10= 90% of data range
+# use z table in reverse, use % to find z-score
+# find % 0.9015 == 1.29 z-score
+z_score = 1.29
+
+# within 10% 
+z_score = -1.29
+
+# mean + 0.53 * 9
+rate = mean + z_score * std 
+rate
+```
 
 
 
