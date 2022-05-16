@@ -457,27 +457,111 @@ what is the IQR of drinks?
 
 measures how many standard deviations away from the mean 
 
+- z = $x$ - $\mu$ / $\sigma$
+- positive z-score = above average
+- negative z-score = below average
+- 0 z-score = close to average
+- *unusual* if z-score is < 3 or > 3
+
 ```{r}
 # mean
-mean = 81
-std = 6.3
+mean = 76
+std = 3.0
 
+# data point
+data_point = 71
 
-# positive
+# positive & negative points on plot
 z_pos = mean + std
-
-# negative
 z_neg = mean - std 
 
-# options for means
-option_ = 65
+z_score = (data_point - mean) / std
 
-z_score = (option_ - mean) / std
 paste('z score: ', round(z_score,2), 'std from the mean')
 
 ```
 
 
+shifting data: you add 5 to each data column or multiply by 5 the
+mean, median don't change but IQR and std scale with the data.
+
+
+
+# Density Curves
+
+```{r}
+water = c(0.5,0.7,2.1,2.2,2.9,3.2,3.2,3.3,3.7,4.5,4.6,4.8,5.2,5.3,6.7,8.1)
+
+df = tibble(
+  water = water,
+  count = frequency(water)
+)
+
+ggplot(
+  df,
+  aes(x= water)
+) +
+  geom_density()
+```
+
+
+need an interval for getting a approximate value
+>= 2.9 + <= 3.1 is ~ 0.04%
+
+
+right skewed (bump on left) = median is left to mean
+
+left skewed (bump on right) = median is right to mean
+
+
+density curve, % of area under density curve x > 3
+
+
+# Normal Distribution
+
+```{r}
+mean = 150
+std = 20
+data_point = 161.4
+
+z_pos = mean + std
+z_neg = mean - std 
+
+# what proportion is lower than data point?
+z_score = (data_point - mean) / std
+
+paste('z score: ', round(z_score,2), 'std from the mean')
+
+# look at z-table using our z-score
+
+# the z value is 0.7157
+
+```
+
+![](ztable.png)
+
+If the data is normally distributed, then 71.5% of the values would be below 0.57. The proportion is 0.7157.
+
+
+```{r}
+mean = 40
+std = 3
+data_point = 47.5
+
+z_pos = mean + std
+z_neg = mean - std 
+
+# what proportion is lower than data point?
+z_score = (data_point - mean) / std
+
+paste('z score: ', round(z_score,2), 'std from the mean')
+
+# proportion LESS than data point
+z_table = 0.9938 
+
+# proportion that scores MORE than data point
+paste('proportion higher than data point: ', round(1 - z_table, 4) )
+```
 
 
 
