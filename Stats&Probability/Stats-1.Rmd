@@ -24,6 +24,7 @@ if (requireNamespace("thematic"))
 
 ```{r, warning=FALSE, message=FALSE ,echo=FALSE}
 library(tidyverse)
+library(stats)
 library(ggvenn)
 ```
 
@@ -193,23 +194,29 @@ Population mean $\mu$ and variance $\sigma^2$ measures the dispersion
 
 ```{r}
 # vector of population
-pop = c(4,4.2,5,4.3,5.5)
+pop = c( 8,1,2,6,1,4)
 
+mean(pop)
 # length(pop)
+median(pop)
 
 # population mean
 pop_mean = mean(pop)
 
 # variance
 variance = function(v, pop_mean){
-  v2 = (v[1] - pop_mean)^2 + (v[2]-pop_mean)^2 + (v[3]-pop_mean)^2 +
-    (v[4]-pop_mean)^2 + (v[5]-pop_mean)^2
+  v2 = (v[1] - pop_mean)^2 + 
+    (v[2]-pop_mean)^2 + 
+    (v[3]-pop_mean)^2 +
+    (v[4]-pop_mean)^2 + 
+    (v[5]-pop_mean)^2 +
+    (v[6]-pop_mean)^2
   
   variance2 = v2 / length(v)
   print(variance2)
 }
 
-variance(pop, pop_mean)
+# variance(pop, pop_mean)
 
 # standard deviation
 print( sqrt( variance(pop, pop_mean) ) )
@@ -218,7 +225,7 @@ sd(pop)
 ```
 
 ```{r}
-c = c(35,50,50,50,56,60,60,75,250)
+c = c( 13,2,1, 5,2,7 )
 
 length(c)
 m = mean(c)
@@ -227,39 +234,248 @@ median(c)
 range(c)
 
 # ----- IQR
-c1 = c(35,50,50,50)
+c1 = c(13,2,1)
 cm1 = median(c1)
-c2 = c(60,60,75,250)
+c2 = c(5,2,7)
 cm2 = median(c2)
 
 glue::glue('IQR: ',cm2 - cm1)
 
 
 variance = function(v, pop_mean){
-  v2 = (v[1] - pop_mean)^2 + (v[2]-pop_mean)^2 + (v[3]-pop_mean)^2 +
-    (v[4]-pop_mean)^2 + (v[5]-pop_mean)^2 + (v[6]-pop_mean)^2 + 
-    (v[7]-pop_mean)^2 + (v[8]-pop_mean)^2 + (v[9]-pop_mean)^2
+  v2 = (v[1] - pop_mean)^2 + 
+    (v[2]-pop_mean)^2 + 
+    (v[3]-pop_mean)^2 +
+    (v[4]-pop_mean)^2 + 
+    (v[5]-pop_mean)^2 + 
+    (v[6]-pop_mean)^2 
+    # (v[7]-pop_mean)^2 + 
+    # (v[8]-pop_mean)^2 + 
+    # (v[9]-pop_mean)^2
   
   variance2 = v2 / length(v)
   print(variance2)
 }
 
-# variance(c, m)
+variance(c, m)
 
 # std
 sqrt( variance(c, m) )
 ```
-the mean is skewed due to the 250 datapoint so the median is better for central tendency
+the mean is skewed due to the 250 datapoint so the **median is better for central tendency** 
+
+
+
+## Sample variance 
+
+Sample mean $x^-$ and sample variance $S^2_{n-1}$ . 
+Standard deviation measures the spread of a data distribution. It measures the typical distance between each data point and the mean.
+
+```{r}
+s = c(13,2,1,5,2,7)
+                              
+n = length(s)
+n
+
+# sort(s)
+
+# sample mean
+sm = mean(s)
+paste('mean: ',sm)
+
+# median
+median(s)
+
+# ------ IQR
+# sq1 = c(2.6, 3.0, 4.9, 5.0, 5.0)
+# sm1 =median(sq1)
+# sq2 = c(6.0, 6.0, 7.9, 8.0 ,8.2)
+# sm2 = median(sq2)
+# 
+# sm2 - sm1
+
+# IQR(s) gives off values
+
+# sample variance (unbiased)// only 5 number //   var(s) gives off values
+variance(s, sm )
+
+# for >5 numbers
+s_2 = (s[1]- sm)^2 + 
+  (s[2] - sm)^2 + 
+  (s[3] - sm)^2 +
+  (s[4]- sm)^2 +
+  (s[5]- sm)^2 +
+  (s[6] - sm)^2
+
+s_2
+# population variance
+paste('pop var: ', s_2 / (n -1))
+
+# sample variance
+paste('sample var: ', s_2 / n )
+
+# sample std (biased)  sd(x) gives off values
+sqrt(variance(s, sm ))
+```
 
 
 
 
+## Box & Whisker Boxplot 
+
+spread of data points.
+
+- whiskers are range
+- middle box line is median
+- outside box lines are quartiles median
+
+Outliers 
+
+- find the median
+- use the medians of q1 and q3 
+
+
+![](boxplot.png)
+
+```{r}
+b = c(52,54,56,58 )
+b = c(10,52,54,56,58 )
+
+
+paste('mean = ', mean(b) )
+paste('median = ', median(b) )# q2
+
+
+q1 = c( 4 , 4 , 6,  7 )
+paste('Q1 ',median(q1))
+
+q3 = c(  11 ,12 ,14 ,15  )
+paste('Q3 ',median(q3))
+
+iqr = median(q3) - median(q1)
+paste(' IQR = ',iqr)
+
+# outliers will be < q1 - 1.5 * IQR  or q3 + 1.5 * IQR
+outlier_1 = median(q1) - 1.5 * iqr
+paste('outlier is <= ', outlier_1)  
+
+outlier_2 = median(q3) + 1.5 * iqr
+paste('outlier is >= ', outlier_2)
+
+# ------------
+# 3 6 12 13 39 = 2 <- high  0  <- low
+# 13 31 38 42 62 = 1
+# 4 9 10 13 20 = 0
+# 13 24 30 40 138 = 0
+# 1 2 3 5 9 = 0
+
+q1 = 13 
+q3 = 6
+i= q3 -q1
+
+q1 - 1.5 * i
+q3 + 1.5 * i
+```
+
+
+<!-- ``` -->
+<!-- Min   Q1    Median    Q3     Max -->
+<!-- -------------------------------- -->
+<!-- 12    18    23        26    29 -->
+<!-- 50    56    64        70    76 -->
+<!-- 7     9     12        15    18 -->
+<!-- ``` -->
+<!-- - 75% of data is more than what number? = look at 25% (Q1)  -->
+<!-- - what % is fewer than 56 ? -->
+<!-- - 25% have more than __ ? -->
+<!-- - 75% have fewer than __ ? -->
 
 
 
+## Mean Absolute Deviation (MAD)
+
+the absolute deviation data point from the mean
+
+```{r}
+m = c(0.3,0.6,0.5,1,0.4,0.8 )
+
+mean(m)
+# n = c(4,5,6,1)
+# mean(n)
+
+# paste('MAD = ', stats::mad(m) )
+
+w =c(
+  abs( mean(m) - m[1] ),
+  abs( mean(m) - m[2] )  ,
+  abs( mean(m) - m[3] ) ,
+  abs( mean(m) - m[4] ) ,
+  abs( mean(m) - m[5] ),
+  abs( mean(m) - m[6] )
+)
+
+paste('MAD : ',sum(w)/ length(m) )
+```
 
 
 
+# Percentiles 
+
+the % of the data that is below the amount in question or % of the data at or below the amount
+
+```{r}
+# number of 14 drivers in total
+# what percentile rank for driver with driving time of 6 hrs?
+# h = c(1,2,2,3,4,5,5) # below 6  7 numbers/ 14 = 50%
+# h.1 = c(1,2,2,3,4,5,5,6) # at 6  8/14 = 57%
+
+# cumulative relative frequency 
+sugar = tibble(
+  sugar_content = c(5, 10, 20, 30, 40, 50),
+  cum_rel_freq = c(0.1,0.2,0.4,0.6,0.8,1.0)
+)
+ggplot(
+  sugar,
+  aes(x= sugar_content, y= cum_rel_freq)
+)+
+  geom_line()+
+  geom_point()
+```
+
+
+15 grams of sugar would be ~ 20% of drinks
+
+what is the median are in what grams ?  0.5 = ~ 25 grams
+
+what is the IQR of drinks? 
+- 25th = 18 g
+- 75th = 40 g
+- 40 - 18 = 22 grams
+
+
+# Z-Scores 
+
+measures how many standard deviations away from the mean 
+
+```{r}
+# mean
+mean = 81
+std = 6.3
+
+
+# positive
+z_pos = mean + std
+
+# negative
+z_neg = mean - std 
+
+# options for means
+option_ = 65
+
+z_score = (option_ - mean) / std
+paste('z score: ', round(z_score,2), 'std from the mean')
+
+```
 
 
 
