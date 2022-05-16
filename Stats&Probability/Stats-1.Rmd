@@ -566,18 +566,21 @@ paste('proportion higher than data point: ', round(1 - z_table, 4) )
 
 ## prices between range example
 
-data points prices between 624:768
-```{r}
-mean = 16.3
-std = 2
-data_point = 14.9 # 12.9 ,14.9
+example data points prices between 624 - 768, check each min and max then find the z-table value for the z-score
 
-# z_pos = mean + std
-# z_neg = mean - std 
+```{r}
+mean = 70
+std = 5
+
+# -- data points 
+data_point_1 = 68
+data_point_2 = 73
 
 # what proportion is lower than data point?
-z_score = (data_point - mean) / std
-paste('z score: ', round(z_score,4), 'std from the mean')
+z_1score = (data_point_1 - mean) / std
+z_2score = (data_point_2 - mean) / std
+glue::glue('z_1 score: {data_point_1} : {round(z_1score,4)} std from the mean')
+glue::glue('z_2 score: {data_point_2} : {round(z_2score,4)} std from the mean')
 
 #---- look at Z TABLE -----
 # proportion LESS than data point
@@ -591,11 +594,11 @@ paste('proportion higher than data point: ', round(1 - z_table, 4) )
 # -----------
 # proportion of prices between range 
 
-# z score for data point 1 = -1.7   -->> look at z-table
-z_1 = 0.04457
+# z score for data point 1 = -0.4 -->> look at z-table
+z_1 = 0.3445
 
-# z score for data point 2 = -0.7
-z_2 = 0.242
+# z score for data point 2 = 0.6
+z_2 = 0.7257
 glue::glue(' proportion between range: {(z_2 - z_1)*100}%')
 # glue::glue(' proportion between range :: {(z_1 - z_2)*100}%')
 ```
@@ -620,15 +623,13 @@ std = 29
 #  find closest value  == 0.24825
 # >>>>>>>>>>>>
 
-#  x% =  10 top >> 0.1   1 - 0.1 = .90
-z_score = 1.29
+#  x% =  left of 5% == 0.05  closest {0.4947}
+z_score = -1.65
 
-
-# mean + 0.53 * 9
-rate = mean + z_score * std 
-rate 
-
-paste('rate for (%): ', ceiling(rate))
+# rate = mean + z_score * std
+# rate
+# 
+# paste('rate for (%): ', ceiling(rate))
 ```
 
 
@@ -652,7 +653,7 @@ glue::glue('| z {z_neg} --- z +{z_pos} |')
 # rates in the top 30%, so need to 100-10= 90% of data range
 # use z table in reverse, use % to find z-score
 # find % 0.9015 == 1.29 z-score
-z_score = 1.29
+# z_score = 1.29
 
 # within 10% 
 z_score = -1.29
@@ -661,6 +662,76 @@ z_score = -1.29
 rate = mean + z_score * std 
 rate
 ```
+
+
+
+
+# Scatterplots
+
+```{r}
+
+df = data.frame(
+  speed = c(20,40,60,80,100,120),
+  fuel = c(13.0,8.0,5.9,7.0,8.3,9.9)
+)
+
+df %>% 
+  ggplot(
+    aes(x= speed, y= fuel)
+  )+
+  geom_point()
+
+```
+
+
+
+# Correlation coefficients
+
+Correlation coefficients are trying to measure the strength of a linear model can be described the relationship between 2 variables
+
+when `r = 1` = closer to 1 is **strong** positive linear relationship (y > x)
+when `r = -1` = negative linear relationship (x > y)
+when `r = 0` = no line fit, no correlation
+when `r = 0.5` = weak positive correlation
+
+## Calculating bivariate correlation 
+
+```{r}
+df = data.frame(
+  x = c(1,2,2,3),
+  y = c(1,2,3,6)
+)
+
+sample_mean.x = mean(df$x)
+sample_std.x = sd(df$x)
+
+sample_mean.y = mean(df$y)
+sample_std.y = sd(df$y)
+
+
+#--------------- compute correlations (r)
+# -1 =< r =< +1
+# our r = 0.945 close to +1
+cor(df, method = 'pearson')
+
+cor.test(df$x, df$y, method = 'pearson')
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
