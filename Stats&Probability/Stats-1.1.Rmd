@@ -26,6 +26,7 @@ if (requireNamespace("thematic"))
 library(tidyverse)
 library(stats)
 library(ggvenn)
+library(glue)
 ```
 
 
@@ -776,13 +777,66 @@ how good is your model based on all residuals => least squares regression
 
 ![](residuals.png)
 
+### least squares regression equation:
+
+- residual = (observed y) - (predicted y)
+- residual = y - y_hat
+
+
 ```{r}
+# predict cost of oil barrel from cost crude oil
+
+# what is the RESIDUAL of {observed}  ... x
+observed = 700
+x = 70
+
+# predict 
+y_hat = -325 + 14 * x
+y_hat
+
+residual = observed - y_hat
+residual
 
 ```
 
 
+### Least Squares Line
 
+Find the equation of least squares regression line to predict
 
+1. find slope : b =  r* (std_y / std_x)
+
+2. find y-intercept, regression line passes (x, y) 
+  - `a = y_hat - bz`
+
+3. predict y from x :  `y_hat = a + bx`. 
+  - a is y-intercept
+  - b is the slope
+  
+  
+```{r}
+sample_mean.x = 24.1
+sample_std.x = 12
+
+sample_mean.y = 12.9
+sample_std.y = 16.2
+
+residual = 0.9
+# ------------
+x = 1
+
+b = residual * (sample_std.y / sample_std.x)
+b
+a = sample_mean.y - b * sample_mean.x
+a
+# y_hat = a + bx
+y_hat = a + b * x
+glue('y_hat = {round(a,2)} + {round(b,2)} * x = {y_hat}')
+
+# a = y_hat - bx
+a.2 = sample_mean.y - b * sample_mean.x
+glue('y_hat = {a.2} - {(b)} * x = {y_hat}')
+```
 
 
 
