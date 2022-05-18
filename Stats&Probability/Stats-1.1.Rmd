@@ -851,10 +851,51 @@ glue('y_hat = {a.2} - {(b)} * x = {y_hat}')
 ```
 
 
+### RMSE
+
+$R^2$ or coefficient of determination is about how much or what % of the total 
+variance is explained and not explained in the regression line
+
+$R^2$ = 1 - standard error of line / standard error y_hat
+
+(S) = std of residuals measures how well the regression line fits the data
+
+```
+y = hours study
+x = caffeine consumed 
+
+Coefficients:
+                Estimate
+hours_studying  2.544
+caffeine (mg)   0.164 
+R-Squared: 0.7673
+Residual standard error (S): 1.532  
+
+y_hat = mx + b
+y_hat = 2.544 * x + 0.164     
+----
+x is caffeine intake, y is hrs spent studying
+
+For each additional 1 mg of caffeine, the study time is 
+predicted to increase by 0.1640 hours.
+
+when caffeine intake is 0mg, study time is predicted to be 2.544 hrs
+
+typical prediction error for this model is S = 1.532 hrs
+
+% of variation explained in study  R-sq = 60.03%
+```
+
+
+for more than bivariate regression the Adjusted R-squared value matters
 
 
 
+```{r}
 
+
+
+```
 
 
 
