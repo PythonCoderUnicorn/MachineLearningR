@@ -25,12 +25,169 @@ if (requireNamespace("thematic"))
 ```{r, warning=FALSE, message=FALSE ,echo=FALSE}
 library(tidyverse)
 library(stats)
-library(ggvenn)
 library(glue)
+library(arrangements)
+library(bayesrules)
+library(bayestestR)
 ```
 
 
 ## Basic Theoretical Probability
+
+Flipping a coin has 50% probability of Heads, P(H) = 1/2
+
+```{r}
+# dice rolling a 1 on 6 sided die = f/n 
+prob = function(f, n){
+  p = f/n
+  glue('Probability is {round(p, 2)*100}%')
+}
+
+prob(2,6) # probability of rolling a 1 or 6
+prob(3,6) # probability of rolling an even
+
+```
+
+### Sample space
+
+Find the probability of pulling a yellow marble from a bag with 3 yellow,
+2 red, 2 green and 1 blue
+```{r}
+possible_outcomes = c(
+  rep('Y', times=3),
+  rep('R', times=2),
+  rep('G', times=2),
+  rep('B',1)
+)
+
+n = length(possible_outcomes)
+
+prob(3, n)
+```
+
+Bag of marbles: 9 red, 2 blue, 3 green in it. What is the probability of selecting
+a non-blue marble?
+
+```{r}
+bag = c( 
+  rep('R', times=9, each=1),
+  rep('B', times=2, each=1),
+  rep('G', times= 3)
+)
+
+n = length(bag)
+# non blue marble 14-2
+prob(12, n)
+
+```
+
+A number is randomly chosen, what is the probability 
+that number is a multiple of 5?
+
+```{r}
+nums = c(32,49,55,30,56,28,50,40,40,45,3,25)
+
+n = length(nums)
+
+# divide the vector by 5, use modulus to get only the ones with 0
+f = sum(nums%%5 == 0)
+
+prob(f,n)
+```
+
+Monty Hall Problem
+
+behind 3 doors are prizes, 2 are goats and 1 is cash prize
+
+```{r}
+doors = 3
+
+# probability of winning NOT switching door
+win_noSwitch = 1/doors
+lose_noSwitch = 2/doors
+
+# switch door, probability of picking wrong door is 2/3
+win_switch = 2/doors
+lose_switch = 1/doors
+
+```
+
+
+Probability of flipping Heads on 3 coins
+```{r}
+coin = tribble(
+  ~'flip 1',~'flip 2',~'flip 3',
+  'T','T','T',
+  'T','T','H',
+  'T','H','T',
+  'T','H','H', #
+  'H','T','T',
+  'H','T','H', #
+  'H','H','T', #
+  'H','H','H'
+)
+
+n = nrow(coin)
+
+# exactly 2 H
+f = 3
+
+prob(f, n)
+
+```
+
+
+A or B = A + B
+
+
+
+```{r}
+
+```
+
+
+# Sets
+
+x = { }
+
+- `union(x,y)` joins all elements  OR
+- `intersect(x,y)` elements in both sets  AND
+- `setdiff(x,y)`
+- `setequal(x,y)`
+- c %in% y  tests for membership
+- `choose(n,k)` k= number of subsets from set size n
+
+```{r}
+x = c(3,12,5,13)
+y = c(14,15,6,3)
+
+intersect(x,y)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
