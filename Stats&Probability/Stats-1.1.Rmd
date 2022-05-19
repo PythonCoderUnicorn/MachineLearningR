@@ -891,11 +891,6 @@ for more than bivariate regression the Adjusted R-squared value matters
 
 
 
-```{r}
-
-
-
-```
 
 
 

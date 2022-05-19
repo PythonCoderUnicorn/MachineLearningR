@@ -1,0 +1,40 @@
+---
+title: "Stats & Probability"
+output: 
+  html_document:
+    toc: yes
+    code_folding: show
+    theme:
+      bg: "#202123"
+      fg: "#c8cbd0" # grey
+      primary: "#00b36b"  # pink "#EA80FC" 
+      base_font:
+        google: Ubuntu
+      heading_font:
+        google: Ubuntu
+      version: 3
+---
+
+Material is lessons from Khan Academy, to refresh my memory and skills.
+
+```{r setup, include=FALSE}
+if (requireNamespace("thematic")) 
+  thematic::thematic_rmd(font = "auto")
+```
+
+```{r, warning=FALSE, message=FALSE ,echo=FALSE}
+library(tidyverse)
+library(stats)
+library(ggvenn)
+library(glue)
+```
+
+
+## Basic Theoretical Probability
+
+
+
+
+
+
+
