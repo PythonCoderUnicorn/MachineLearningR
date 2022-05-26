@@ -150,20 +150,43 @@ A or B = A + B
 
 x = { }
 
-- `union(x,y)` joins all elements  OR
-- `intersect(x,y)` elements in both sets  AND
-- `setdiff(x,y)`
+- `union(x,y)` joins all elements  "OR" `U`
+- `intersect(x,y)` elements in both sets  "AND"  
+- `setdiff(x,y)` x - y, elements !y but are in x `x\y`
 - `setequal(x,y)`
 - c %in% y  tests for membership
 - `choose(n,k)` k= number of subsets from set size n
 
 ```{r}
-x = c(3,12,5,13)
-y = c(14,15,6,3)
+x = c(6,12,18,24    )
+y = c(12,18 )
 
+
+sort(union(x,y) )
+setdiff(x,y) # x\y
 intersect(x,y)
 ```
 
+## Conditional Probability
+
+Probability of event A is 0.6, probability of event B is 0.5, probability
+of A given B is 0.7. Find P(B | A).
+
+P(A and B) = P(A | B) * P(B) = P(B|A) * P(A)
+
+```{r}
+A_given_B = 0.7
+B = 0.5
+A = 0.6
+
+A_and_B = A_given_B * B
+
+glue("P(A and B) = {A_and_B}")
+
+# A * P(B | A) = 0.35
+B_given_A = A_and_B / A
+glue("P(B given A) = {round(B_given_A,2)}")
+```
 
 
 
