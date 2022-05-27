@@ -247,6 +247,66 @@ glue("indep. events = {BgivenA == B}")
 
 
 
+# Factorial, Permutations & Combinations
+
+
+```{r}
+# --- combinations
+# 5 movies 8 restaurants 2 sports, number of dates = 5*8*2
+# continent = 4  cities = 10*8*4*3
+# shirts = 10*4*12*9
+# schools = 6*3*2
+
+# -- permutations nPr
+# 3 letters for 3 letter word, no repeat = 5*4*3
+# 15 ingredients for 3 dishes  n=15, r=3
+# 6 questions = factorial(6)
+# arrange 4 dishes from 7 dishes = 7*6*5*4
+# 1200 students, 40 govt members, 4 positions  n=40 r=40
+# select 4 from 6  = 6*5*4*3
+# 6 albums= 75 songs => 10 songs from 75 (no repeats)  r=10 n=75
+# arrange 3 runners out of 7 =  7*6*5
+# 5 pets, 16 from 75 take 1   r=16 n=5
+
+# --- combinations nCr = n! / (n-r)! * r!
+
+# 3 dishes from 9 options = 9C3
+# 2 toppings from 6 options = 6C2
+# select 5 from 7 workers = 7C5
+# select 3 from 6 books = 6C3
+# factorial(6) / (factorial(6-3) * factorial(3))
+
+
+# ----- Permutations & Combinations
+
+# 5 deer, 2 next to each other  factorial(5)
+# factorial(4)*2 # 2 deer
+# 6 letter word, 2 letters repeat  = factorial(6)/factorial(2)
+
+# 
+```
+
+
+1:100, how many are divided by 3 or 2 ?
+
+33 numbers /3 and 50 numbers /2 = 50+33 = 83
+drop duplicates like 6 (/3 and /2)
+16 numbers are both /2 and /3
+83-16 = 67
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
