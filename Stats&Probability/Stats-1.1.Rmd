@@ -721,7 +721,7 @@ simple linear regression is used to predict a quantitative outcome y on the basi
 - b1 is the slope pf regression line
 
 
-```{r}
+```{r echo=FALSE}
 df = tibble(
   x = c(1,2,3.5,4,6,7,8,9),
   y = c(8,7,7,5.5,5,3.5,2.5,2.5)
@@ -891,12 +891,19 @@ typical prediction error for this model is S = 1.532 hrs
 
 % of variation explained in study  R-sq = 60.03%
 
-# what is the 95% confidence interval of least square regression line?
+## what is the 95% confidence interval of least square regression line?
 1. 0.0164 + T * 0.057
 2.T is degrees of freedom (df)  df = (n -2) == 18
   t-table : 95% and df 18 == 2.101
-3. 0.0164 + 2.101 * 0.057
+3. 0.0164 + 2.101 * 0.057 = 0.136157
 
+
+## use the p-value to conclude if linear relationship is significant
+
+under the P column which is 2 tail, divide by 2
+p-value = 0.010/2 == 0.005
+alpha = 0.05 
+compare: IF ( p-value < alpha) Then reject null
 
 ```
 
@@ -905,8 +912,49 @@ for more than bivariate regression the Adjusted R-squared value matters
 
 
 
+### Confidence interval for slope
 
+data about life expectancy (in years) and infant mortality (per 1000) in a random sample of 33 countries. Here is computer output from a least-squares regression analysis on her sample:
+Which of these is a 90%, percent confidence interval for the slope of the least squares regression line?
 
+```
+-----------------------------------------------
+Predictor   Coef      SE Coef   T         P
+constant    80.37     1.345     59.75     0.000
+mortality   -0.442    0.037     -11.97    0.000
+S= 5.073
+R_Sq= 81.64%
+------------------------------------------------
+```
+
+```{r}
+coef = -0.442
+SE_coef = 0.037
+
+n= 33
+df = n-2
+# t-table : confidence % and df 
+t = 1.7
+
+#--
+coef + t * SE_coef
+#--
+
+# test statistic for testing the null hypothesis
+#  t = coef / SE_coef
+
+# IF ( p-value < alpha) Then reject null
+p= 0.282 /2
+alpha = 0.05
+p < alpha
+
+# confidence interval instead of p-value, 2 sided test
+# check if slope contains 0
+#   interval excludes 0 => reject null
+#   interval includes 0 => fail to reject null
+
+#  CI(-0.02, 0.12) has 0 => fail to reject
+```
 
 
 
