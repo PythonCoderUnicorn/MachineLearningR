@@ -701,6 +701,15 @@ cor.test(df$x, df$y, method = 'pearson')
 ```
 
 
+
+
+
+
+
+
+
+
+
 # Linear Regression 
 
 simple linear regression is used to predict a quantitative outcome y on the basis of one single predictor variable x. The goal is to build a mathematical model (or formula) that defines y as a function of the x variable.
@@ -861,13 +870,10 @@ $R^2$ = 1 - standard error of line / standard error y_hat
 (S) = std of residuals measures how well the regression line fits the data
 
 ```
-y = hours study
-x = caffeine consumed 
-
 Coefficients:
-                Estimate
-hours_studying  2.544
-caffeine (mg)   0.164 
+                Estimate  SE Conf   T        P
+hours_studying  2.544     0.134     18.955    0.000
+caffeine (mg)   0.164     0.057     2.862     0.010
 R-Squared: 0.7673
 Residual standard error (S): 1.532  
 
@@ -884,6 +890,14 @@ when caffeine intake is 0mg, study time is predicted to be 2.544 hrs
 typical prediction error for this model is S = 1.532 hrs
 
 % of variation explained in study  R-sq = 60.03%
+
+# what is the 95% confidence interval of least square regression line?
+1. 0.0164 + T * 0.057
+2.T is degrees of freedom (df)  df = (n -2) == 18
+  t-table : 95% and df 18 == 2.101
+3. 0.0164 + 2.101 * 0.057
+
+
 ```
 
 
