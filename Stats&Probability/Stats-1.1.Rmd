@@ -1005,6 +1005,165 @@ df2 %>%
 ```
 
 
+## example
+
+Conservation group preserving species, wants to buy land, choices of land:
+45 sq km with 70 at risk species or
+5 small nature preserves each with 3 sq km area with 16 at risk species
+
+```{r, echo=FALSE}
+nature = tibble(
+  island = 1:12,
+  area_sq_km = c(46, 36, 31 ,9, 
+                 5, 5, 4, 4 ,
+                 3, 2, 1, 1),
+  species_at_risk = c(75, 67, 66, 51, 
+                      28, 20, 43, 31, 
+                      28, 32, 30, 20),
+  species_extinct = c(8,3,8,8,
+                      5,6,10,5,
+                      7,8,8,4),
+  proportion_extinct = c(0.11, 0.04, 0.12, 0.16, 
+                         0.18, 0.30, 0.23, 0.16 ,
+                         0.25, 0.25, 0.27 ,0.20)
+)
+
+nature %>% 
+  ggplot(aes(x= log(area_sq_km), y= proportion_extinct))+
+  geom_point()
+
+
+```
+
+
+Notice the x-axis is in log
+
+```{}
+Predictor       Coef        StDev       T
+constant        0.28996     0.01269     22.85  
+ln(area)        -0.05323     0.00618     -8.61
+S= 0.02863
+R-sq = 87.1%
+```
+
+proportion =  0.28996  - 0.05323  * ln(area)
+```{r}
+#---- 45 km^2 
+constant_coeff = 0.28996  
+area_coeff = 0.05323  
+nat_log = log(3) # 45 
+
+proportion = constant_coeff -(area_coeff) * nat_log
+
+# number of species at risk for area
+animals_at_risk = 5*16 #70
+ext = proportion * animals_at_risk
+saved = animals_at_risk - ext
+
+glue("proportion of extinction = {round(proportion,4)}")
+glue("{floor(ext)} animals extinct")
+glue("{ceiling(saved)} animals saved")
+```
+
+
+
+
+
+# ANOVA
+
+Analysis of variance (ANOVA). Calculating the total sum of squares
+
+```{r}
+A = tibble(
+  A = 3:1,
+  B = c(4,3,4),
+  C = c(5,6,7)
+)
+
+s = (sum(A$A) + sum(A$B) + sum(A$C)) / 9
+s
+
+Am = mean(A$A) 
+Bm = mean(A$B) 
+Cm = mean(A$C)
+
+SST = (3 - s)^2 +(2-s)^2 + (1-s)^2 +
+  (5-s)^2 +(3-s)^2 +(4-s)^2 +
+  (5-s)^2 + (6-s)^2 +(7-s)^2 
+
+SST
+
+# df = columns (m) * rows (n) - 1
+
+```
+
+
+variation within group, how far each ata point is way from their local group's mean
+
+```{r}
+SSW = (3-Am)^2 +(2-Am)^2 +(1-Am)^2 +
+  (5-Bm)^2 + (3-Bm)^2 + (4-Bm)^2 +
+   (5-Cm)^2 +(6-Cm)^2 +(7-Cm)^2 
+
+SSW
+# 6 of the 30 variance
+
+# degrees of freedom
+m=3
+n=3
+df= m * (n-1)
+df
+#------- sum of squares between 
+
+SSB = (Am - s)^2 +(Am - s)^2+(Am - s)^2 +
+  (Bm - s)^2 +(Bm - s)^2 +(Bm - s)^2 +
+  (Cm - s)^2 +(Cm - s)^2 +(Cm - s)^2
+
+SSB
+
+# ----
+SST  
+SSW + SSB # = 30 (SST)
+```
+
+
+
+## Hypoethesis test with F-stat
+
+use the sum of squares to make a decision, determine if variance is due to
+random chance
+
+Null hypothesis = columns make no difference, alpha = 0.10
+Alt hypothesis = columns do make a difference
+
+F-statistic = (SSB / m-1) / (SSW/ m(n-1))
+
+F-stat 
+if F number is big means there is lower probability the null hypothesis is correct
+  (the difference is between the means)
+  
+if F number is small means harder to reject null hypothesis 
+  (variance within sample makes larger difference == random)
+
+
+```{r}
+F_stat = (SSB/ 2) / (SSW/df)
+F_stat
+```
+
+look at a F-distribution table, alpha = 0.10, 
+df=2 (numerator), df=6 (denominator) = 3.46
+
+If F_stat is > F-table value = reject null (there is a difference)
+
+
+
+
+
+
+
+
+
 
 
 
