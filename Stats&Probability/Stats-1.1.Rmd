@@ -960,10 +960,49 @@ p < alpha
 
 
 
+# non-linear regression
+
+Use of quadratic equations to best fit the line
+
+Price of movie title and how many years since it has been in theaters.
+The function that better fits the data is `y= 0.5x^2 - 5x+13`. Predict
+price of movie that was in theaters 5.5 years ago.
+```{r}
+x= 5.5
+y = 0.5 * (x^2) - (5 * x) + 13
+y
+```
+
+## Transform non-linear data
+
+dataframe 1 has regular x and y, can't fit straight line for regression
+```{r, echo=FALSE}
+df1 = tibble(
+  x= c(3.46,3.36,1.37,3.82,2.75,0.73,0.17,1.20,2.30,2.06,2.54,2.04,3.70,
+       2.50,1.02,2.11,3.15,0.83,2.81,0.23),
+  y= c(2307.23,2290.87,23.44,5285.55,562.34,6.44,1.77,19.02,199.53,
+       114.82,363.08,131.58,6014.25,316.23,12.57,128.82,1412.54,5.41,516.52,1.70)
+)
+
+df1 %>% 
+  ggplot(aes(x=x, y=y))+
+  geom_line()+
+  geom_point()
+```
 
 
+Transform the dataframe 1 into a regression line by taking the log10() of the y column `log10(df1$y)`
 
+```{r, echo=FALSE}
+df2 = df1 %>% 
+  mutate(y = log10(df1$y) )
 
+df2 %>% 
+  ggplot(aes(x=x, y= y))+
+  geom_line()+
+  geom_point()+
+  geom_smooth(method = 'lm')
+```
 
 
 
