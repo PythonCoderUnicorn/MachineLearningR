@@ -25,17 +25,112 @@ if (requireNamespace("thematic"))
 
 
 
-## Models & Estimation
+# Models & Estimation
+
+Models are description of the system, process, or relationship you are trying to evaluate. If you have an accurate model for your system, then you will have a better idea of the quality of your data, the inference of your parameters, and generally get much farther in your analysis. 
+
+response  <= (model or relationship being tested or confirmed) + stochastic
+
+
+**stochastic** = randomly determined, random error or deviations 
+from the relationship that are unexplained by the model
+
+
+Example: data regarding rainfall and plant growth.
+
+- response is $y$ plant growth
+- data determines rainfall $x$ 
+- hypothesis = increase in rainfall results in increase plant growth
+- factors = sunlight, temperature etc.  
+- factors and unknowns => random error (stochastic)
+
+Simple Linear Regression: 
+as x increase = change in y (constant across all values of x) 
+
+findings:  increase in rainfall results in a small increase in plant growth
+which estimates a parameter {coefficient}
+
+
+## Model Complexity 
+
+We want a model to be general enough that it contains truths and can be applied elsewhere, but not so general that it does not advance our understanding of the system.
+
+models that are too general = underparameterized 
+
+models that are too complex = overparameterized
+
+important to consider what the goal of model selection is
+
+- predicting unobserved information? 
+- goal is understanding relationships within the data you’ve already collected ?
 
 
 
+## Estimation
+
+Estimation is how we use our model, or how we allow the parameters to be 
+figured out. three common estimation types:
+
+1. least used **Monte Carlo** estimation (`bootstrapping` or resampling), uses observed data repeatedly to draw inferences
+
+2. most common, "Fisherian estimation" Frequentist estimation assumes a parametric distribution and is interested in the long run of frequencies within the data. 
+
+3. **Bayesian** estimation, Bayesian inference is also assume a parametric distribution. Bayesian estimation includes a prior distribution or prior knowledge about the parameter.
 
 
+*most important recommendation is to report your estimation type in sufficient detail*
 
 
+### Process
+
+null hypothesis = no difference from what occurs in nature
+
+1. collect data
+2. develop test statistic
+3. randomize data and generate large number of test statistics from randomized data
+4. randomized test stats create null distribution
+5. compare to observed test stats
 
 
+ **Frequentist** approaches asks: “What is the probability of the data that I observed compared to a fixed and unknowable parameter(s).”
+ 
+paradigm:
+ 
+1. Assume that data are repeatable random variables.
+2. Assume that parameters do not change (fixed and unknowable)
+3. All experiments are considered to be independent
+4. accept or reject hypotheses and outcomes
+5. *p-values* are a key outcome
 
+
+**Bayesian** approach asks “What is the probability of certain parameter values based on the data I observed.”
+
+paradigm:
+
+1. Assume that the data are fixed
+2. Adopt a degree-of-belief from probability
+3. *Can update beliefs* in the sense that prior information can be used to directly inform the estimate of certain parameters
+4. Bayesian estimation is driven by distributions and uncertainty
+5. Outcomes are not required to accept or reject anything based on a critical value
+
+
+<img height='200' src="FreqBayes.png">
+
+
+The problem with *p-values* 
+
+- often hard to explain 
+- p-value does not indicate result is correct or not
+- does not provide the magnitude of an effect
+
+
+### Estimation mechanics
+
+**Frequentist**s use maximum likelihood estimation (MLE), max the log function by minimizing the negative log likelihood 
+
+**Bayesian** uses Bayes rule, a term for posterior distribution, likelihood, prior distribution and normalizing constant
+
+Posterior (outcome) = likelihood * prior / normalizing * constant
 
 
 
