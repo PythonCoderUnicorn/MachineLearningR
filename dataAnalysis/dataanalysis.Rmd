@@ -1,0 +1,53 @@
+---
+title: "Data Analysis"
+output: 
+  html_document:
+    toc: yes
+    code_folding: show
+    theme:
+      bg: "#202123"
+      fg: "#c8cbd0" # grey
+      primary: "#00b36b"  # pink "#EA80FC" 
+      base_font:
+        google: Ubuntu
+      heading_font:
+        google: Ubuntu
+      version: 3
+---
+
+The source of learning material is **Data Analysis in R** eBook.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+if (requireNamespace("thematic")) 
+  thematic::thematic_rmd(font = "auto")
+```
+
+
+
+## Models & Estimation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
