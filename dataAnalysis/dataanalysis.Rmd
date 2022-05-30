@@ -443,6 +443,95 @@ plot(tukey)
 
 
 
+# General Linear Models (GLM)
+
+Generalized linear model is just a linear model, but with a modified error distribution that better captures the data generating process that has helped in the creation of your data.
+
+The arguments are `family` set to `poisson` or `binomial` etc.
+
+
+
+## Poisson linear regression
+
+Poisson distribution is a distribution of values that are zero or greater and integers only. Example is count observations, always positive, the 1 parameter is $\lambda$ lambda which is both mean and variance.
+
+Using the fishing data in the COUNT library, let’s model the relationship between total abundance (totabund) and mean depth (meandepth). Total abundance are counts, and we might hypothesize that abundances of fishes decreases with increasing depth.
+
+```{r}
+library(COUNT)
+data(fishing)
+
+ggplot(
+  fishing,
+  aes(x= fishing$meandepth, y= fishing$totabund)
+) +
+  geom_point()
+
+```
+
+
+
+## Poisson GLM
+
+```{r}
+pois.glm = glm(fishing$totabund ~ fishing$meandepth, 
+               data = fishing, 
+               family = poisson
+               )
+summary(pois.glm)
+
+```
+
+
+
+
+
+
+
+
+
+
+# Poisson Regression -- dataquest
+
+Poisson Regression models are best used for modeling events where the outcomes are counts. Or, more specifically, count data: discrete data with non-negative integer values that count something. Either as counts or ratios.
+
+Poisson Regression helps us analyze both count data and rate data by allowing us to determine which explanatory variables (X values) have an effect on a given response variable (Y value, the count or a rate). 
+
+$\lambda$ lambda or is $\mu$ (mu) is the average number of times an event may occur per unit of exposure (**parameter** of Poisson distribution). Exposure can be times, space, distance etc, $t$. 
+
+Poisson Distribution is most commonly used to find the probability of events occurring within a given time interval. 
+
+- `dpois(sequence,lambda)` to plot the Probability Density Functions (PDF) in our Poisson distribution. 
+
+## Example
+
+If there are 12 cars crossing a bridge per minute on average, what is the probability of having seventeen or more cars crossing the bridge in any given minute?
+
+`ppois(q, u, lower.tail=T)` provides the probability that a random variable will be lower or equal to a value, set it to false to find `q` >16.
+
+```{r}
+p = ppois(q= 16, lambda = 12, lower.tail = F)
+
+glue("there is {floor(p*100)}% probability")
+```
+
+# Poisson Regression & GLM
+
+Generalized Linear Models are models in which response variables follow a distribution other than the normal distribution.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
