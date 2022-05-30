@@ -215,12 +215,13 @@ most common ones
 
 Fake dataset about fish, length is response variable y and other variables are predictors. 
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
 fish_df = tibble(
   weight = c(16,18,15,27,29,31),
-  stream = factor(c(1,1,2,2,3,3)),
-  watershed = factor(c(1,1,1,2,2,2)),
-  habitat = factor(c(1,2,3,1,2,3)),
+  stream = factor(c(1,1,2,2,3,3)), # c(1,1,2,2,3,3),
+  watershed = factor(c(1,1,1,2,2,2)), # c(1,1,1,2,2,2), 
+  habitat = c(1,2,3,1,2,3), #factor(c(1,2,3,1,2,3)),
   length =  c(41,46,37,52,54,60)
 )
 
@@ -228,6 +229,8 @@ lm(fish_df$length ~ 1)  # same as mean(length) but in the model compares columns
 m= fish_df$length ~ 1
 model.matrix(m)
 ```
+
+
 ### T-test (ANOVA)
 
 Compare 2 groups for lengths = ANOVA test.
@@ -250,12 +253,73 @@ model.matrix(fish_df$length ~ fish_df$watershed -1)
 ```
 
 
+# Simple Linear Regression
+
+The scatterplot with line of best fit, no categorical data, x changes so does y.
+As seen the formula is `lm(length ~ weight)` 
+
+```{r}
+lm(fish_df$length ~ fish_df$weight)
+```
+
+The fish weight estimate of 1.167 (slope coefficient). For every 1 unit increase in weight the fish length increases by 1.167. [fish length increases 1.167 for every 1 unit in weight].
+
+
+# Pre-fitting your model
+
+The pre and post fitting of models are a backandforth activity. 
+
+- data transformation, get the data to better fit for a model, such as `log()` values for constraining clustered or skewed data for estimation, or **mean-centering** where you subtract the mean of all observations which centers the data at 0. Avoid test of normality such as Shapiro-Wilk test, Anderson-Darling test etc as they are very conservative and state that data is not normally distributed.
+
+- correlated predictors, ensure predictors are not too correlated => poor coefficient estimates. Correlations closer to 1 mean the 2 variables are highly predictive of each other. There is no set threshold for correlations but `0.6-0.7` should get your attention, below `0.6` is fine. Use the `cor(matrix.object)` for correlation values
 
 
 
+# Post-fitting your model
+
+Evaluate the model with the summary function
+
+```{r}
+set.seed(15)
+
+n <- 15 # Number of observations
+a <- 0 # Intercept
+b <- 1.5 # Slope
+sigma2 <- 25 # Residual variance
+x <- 1:15 # Values of covariate 
+
+eps <-rnorm(n, mean=0, sd=sqrt(sigma2))
+y <- a + b*x + eps
+
+model = lm(y ~ x)
+summary(model)
+```
+
+## Model Summary
 
 
+- **residuals** = distance from each observation is from the fitted model. Residuals are normally distributed around 0, if not it shows model is over or under predicting too many points. Want median residual ~0, and min and max to be the same
 
+- **coefficients** = parameter estimates
+
+- **significance codes** = the p-values, first select a significance threshold such as alpha = 0.05
+
+- **residual standard error** = the standard deviation (spread) of residuals
+
+- **multiple R-squared** = the % of variance explained by the model, a common model metric, higher values = 'better' but increases with additional model terms
+
+- **adjusted R-squared** = the % of variance explained by the model djusted for more model terms 
+
+- **F-statistic** = tests the null hypothesis that all model coefficients are 0. F-stats are reported for ANOVA models.
+
+```{r}
+# plot(model)
+
+# residuals.lm(model) == resid(model)
+res = residuals.lm(model)
+
+hist(res, breaks= 10, las= 1, border='black',col= 1, xlab="Residual")
+```
 
 
 
