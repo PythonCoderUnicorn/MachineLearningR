@@ -512,21 +512,91 @@ If there are 12 cars crossing a bridge per minute on average, what is the probab
 ```{r}
 p = ppois(q= 16, lambda = 12, lower.tail = F)
 
-glue("there is {floor(p*100)}% probability")
+glue::glue("there is {floor(p*100)}% probability")
 ```
 
 # Poisson Regression & GLM
 
-Generalized Linear Models are models in which response variables follow a distribution other than the normal distribution.
+Generalized Linear Models are models in which response variables follow a distribution other than the normal distribution. Generalized Linear Models have response variables that are categorical such as Yes, No; or Group A, Group B etc.
+
+A Poisson Regression model is a Generalized Linear Model (GLM) that is used to model count data and contingency tables. The output Y (count) is a value that follows the Poisson distribution. It assumes the logarithm of expected values (mean) that can be modeled into a linear form by some unknown parameters.
+
+To transform the non-linear relationship to linear form, a link function is used which is the log for Poisson Regression. For that reason, a Poisson Regression model is also called log-linear model.
+
+- y = response variable
+- a (intercept) and b = numeric coefficients
+- x is predictor/ explanatory variable
+
+```
+important characteristics for Poisson distribution and Poisson Regression is equidispersion, which means that the mean and variance of the distribution are equal.
+```
+
+<img height='400' src= 'glm.png'>
+
+```{r}
+library(datasets)
+data = warpbreaks
+glimpse(data)
+str(data)
+```
+```{r}
+hist(data$breaks, col = 2, breaks = 10)
+
+mean(data$breaks)
+var(data$breaks)
+```
+
+
+The variance is much greater than the mean, which suggests that we will have over-dispersion in the model.
+
+```{r}
+poisson_model = glm(breaks ~ wool + tension, 
+                    data = data, 
+                    family = poisson(link = 'log'))
+
+summary(poisson_model)
+```
+
+
+compare to another model
+```{r}
+poisson.model2 = glm(breaks ~ wool + tension, data = data,
+                     family = quasipoisson(link = 'log'))
+summary(poisson.model2)
+                                           
+                                           
+```
+
+
+extract and compare coefficients
+```{r}
+library(arm)
+
+coeff1 = coef(poisson_model)
+coeff2 = coef(poisson.model2)
+
+se.coef1 = se.coef(poisson_model)
+se.coef2 = se.coef(poisson.model2)
+
+models.both = cbind(coeff1, coeff2, se.coef1, se.coef2, exponent= exp(coeff1))
+
+# show dataframe
+models.both
+```
+
+This shows that changing from type A wool to type B wool results in a decrease in breaks 0.8138425 times the intercept, because estimate -0.2059884 is negative. Another way of saying this is if we change wool type from A to B, the number of breaks will fall by 18.6% assuming all other variables are the same.
 
 
 
+## predict from model
 
+```{r}
+newdata = data.frame(wool= "B", tension="M")
 
+predict( poisson.model2, newdata = newdata, type = 'response')
+```
 
-
-
-
+Our model is predicting there will be roughly 24 breaks with wool type B and tension level M.
 
 
 
