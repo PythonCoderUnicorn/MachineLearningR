@@ -256,7 +256,8 @@ model.matrix(fish_df$length ~ fish_df$watershed -1)
 # Simple Linear Regression
 
 The scatterplot with line of best fit, no categorical data, x changes so does y.
-As seen the formula is `lm(length ~ weight)` 
+As seen the formula is `lm(length ~ weight)`.
+
 
 ```{r}
 lm(fish_df$length ~ fish_df$weight)
@@ -312,6 +313,8 @@ summary(model)
 
 - **F-statistic** = tests the null hypothesis that all model coefficients are 0. F-stats are reported for ANOVA models.
 
+
+
 ```{r}
 # plot(model)
 
@@ -322,6 +325,25 @@ hist(res, breaks= 10, las= 1, border='black',col= 1, xlab="Residual")
 ```
 
 
+### Notes
+
+GOAL: looking for the model to have `homoscedasticity` (means residuals are approximately the same), we don't want patterns in the data == `heteroscedasticity`
+
+For multiple comparisons using ANOVA comes with multiple tests (post hoc means tests) where you run the risk of false positives with increased thresholds. Use **Tukey's Honest Significant Difference** (HSD) test as it is common and versatile.
+
+**ANCOVA** analysis of covariance,  can increase the power to detect differences by reducing the within group variances. It can often be evaluated early as diagnostic to understand the relationship between the continuous and categorical predictors, and the significance of the interaction term may determine how you proceed.
+
+- if the interaction is not significant => remove it
+
+
+
+
+
+
+
+
+
+# ANOVA 
 
 
 
