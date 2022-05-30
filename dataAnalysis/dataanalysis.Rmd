@@ -345,13 +345,96 @@ For multiple comparisons using ANOVA comes with multiple tests (post hoc means t
 
 # ANOVA 
 
+Analysis of variance is used for categorical data, but can include continuous data.
+ANOVA test are `1-way` and `2-way` which means how many factors are being exminded
+in the model. A **factor** is the categorical variables you are evaluating (levels or groups). 
+
+The analysis of variance being checked is 
+
+- *between-group* variance = comparing the mean of each group with overall mean of the data (individual points don't matter)
+- *within-group* variance = variation of each data point observation from its group mean
+
+sum of squares is used to quantify them, this metric in ratio is the **F-statistic** which combines degrees of freedom and p-value
+
+- small p-values come from large F-statistics
+- large F-statistics suggest that the between group variance `>` than the within-group variance. 
 
 
 
+## anova - 1
+
+Basic categorical dataset, example dataset of fish, question of whether the mean maximum fish size differs among populations.
+
+```{r}
+fish.df = tibble(
+  size = c(3,4,5,6,4,5,6,7,7,8,9,10),
+  pop = c( rep("A",4), rep("B",4), rep("C",4))
+)
+
+fish.df %>% 
+  ggplot( aes( x= pop, y= size)) + 
+  geom_boxplot()+ 
+  geom_jitter()
+
+```
+
+ANOVA model will answer the question whether any group means differ from another. 
+It only tells us if one or more group(s) differ from another — *it will not tell us which groups differ*. 
 
 
+## anova - 2 (lm)
+
+```{r}
+lm.model = lm(size ~ pop, data = fish.df)
+summary(lm.model)
+```
+
+So in the example above popA has a mean maximum size of 4.5, while the mean maximum size of popB is 5.5, the combination of 4.5 and 1.
+
+The associated p-value can help provide a significance interpretation on the F-statistic. That is, a p-value < 0.05 tells us that at least one group mean differs from another at the α = 0.05 level of significance. 
+
+- ANOVA p-value > 0.05  == no group means differ from each other
+- ANOVA p-value < 0.05 == 1+ group mean differs from others
 
 
+## anova - 3 (aov)
+
+the preferred way to do AOV is the `aov()` function. Categorical variables need to be factors, ensure factors by `as.factor()`
+
+```{r}
+aov.model = aov(size ~ pop, data = fish.df)
+summary(aov.model)
+
+aov.model$coefficients
+```
+
+
+## anova - 4 (Tukey HSD)
+
+Multiple comparisons ANOVA, helps us quantify the differences between groups in order to determine which groups significantly differ from each other. Use the Tukey's HSD test (many others can be used), after you run a `aov()` test. 
+
+The Tukey HSD procedure will run a pairwise comparison of all possible combinations of groups and test these pairs for significant differences between their means, all while adjusting the p-value to a higher threshold for significance in order to compensate for the fact that many statistical tests are being performed and the chance for a false positive increases with increasing numbers of tests.
+
+```{r}
+tukey = TukeyHSD(aov.model, conf.level = 0.95)
+tukey
+```
+
+### Summary
+
+- `diff` column provides an estimate of the mean difference between the groups
+- `lwr` and `upr` columns give us the lower and upper bound of the confidence interval on the difference.
+
+Confidence Interval :
+
+- If the `confidence interval overlaps 0 == a non-significant comparison` (i.e., the difference is not significantly different from 0)
+
+- if the confidence interval does not overlap 0 == have evidence for a significant difference between groups.
+
+
+```{r}
+plot(tukey)
+```
 
 
 
