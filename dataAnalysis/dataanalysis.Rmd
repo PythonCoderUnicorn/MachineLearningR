@@ -135,6 +135,141 @@ Posterior (outcome) = likelihood * prior / normalizing * constant
 
 
 
+# Linear Model 
+
+statistical model vs statistical estimation
+
+## Terms
+
+- units – observations or data points, often indexed with *i*
+- $x$ variable = predictors or independent variable
+- $y$ variable = outcome, response or dependent variable 
+- inputs (model terms) inputs == predictors but predictors are indep. variables
+- residual error = the final term of model equation (the unexplained)
+- multiple regression is more than 1 predictor (multivariate regression/ MANOVA/ PCA)
+
+
+
+## Components
+
+Linear model :
+
+- response = deterministic + stochastic 
+- outcome = linear predictor + error
+- result = systematic + chance
+
+`lm( y ~ x)` the error term is estimated but not specified
+
+ It is critical that we understand how our (response) data were generated and sampled, in order to best inform our decision about an associated distribution.
+ 
+ 1. distributions: normal, binomial. Bernoulli, Poisson and beta, etc
+ 2. how data was sampled: 
+    - if data observations were success/fail then you are working with a Bernoulli distribution
+    - if data represents counts >= 0 integers then Poisson distribution
+3. data characteristics: what the data looks like
+4. run a model & explore distributions
+5. no perfect answer: *The goal is always to get to that one, clear distribution that makes sense and is defensible*
+
+
+Linear component, doesn't always mean straight line (GLMs), predictors can be continuous or categorical. 
+
+- Continuous => regression. 
+- Categorical => ANOVA. 
+- Continuous & Categorical => ANCOVA (analysis of co-variance)
+- design matrix helps understand how the model works, tells you if an effect is present and by how much. use `model.matrix()`
+
+
+**Parameterization** effect is the intercept estimate is always the mean of group 1, 
+but also the baseline estimate that other groups needs to be combined with 
+
+
+
+### Distributions
+
+most common ones
+
+1. Normal distribution 
+
+  - for continuous data
+  - negative infinity to positive infinity
+  - impacted by central limit theorem
+  - parameters: mean and variance
+
+2. Binomial distribution
+
+  - discrete integer data (successes out of trial)
+  - parameters: p success probability and N sample size
+  - Bernoulli distribution N= 1 (coin flip = heads or tails)
+
+3. Poisson distribution
+
+  - counts >= 0 to infinity
+  - parameter: mean, variance
+  - approx to Binomial when N is large, p is small
+  - approx to Normal when lambda is large
+
+
+
+
+### Linear Model - 1
+
+Fake dataset about fish, length is response variable y and other variables are predictors. 
+
+```{r}
+fish_df = tibble(
+  weight = c(16,18,15,27,29,31),
+  stream = factor(c(1,1,2,2,3,3)),
+  watershed = factor(c(1,1,1,2,2,2)),
+  habitat = factor(c(1,2,3,1,2,3)),
+  length =  c(41,46,37,52,54,60)
+)
+
+lm(fish_df$length ~ 1)  # same as mean(length) but in the model compares columns
+m= fish_df$length ~ 1
+model.matrix(m)
+```
+### T-test (ANOVA)
+
+Compare 2 groups for lengths = ANOVA test.
+
+```{r}
+#                     intercept 1
+lm(fish_df$length ~ fish_df$watershed)
+```
+The mean of `watershed2` is 14 but not found in data, it needs to be added to the estimate of the 1st `watershed` group, thus `41.33 + 14 = 53.33` is the mean length of fish in `watershed2`. *Think of the intercept as a control group, the other columns are the difference between the controls.*
+
+
+```{r}
+# means parameterization 
+lm(fish_df$length ~ fish_df$watershed -1)
+```
+
+```{r}
+
+model.matrix(fish_df$length ~ fish_df$watershed -1)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
