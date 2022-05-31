@@ -1,0 +1,181 @@
+---
+title: "Tidy Modeling in R - 4"
+output: 
+  html_document:
+    toc: yes
+    code_folding: show
+    theme:
+      bg: "#222222"
+      fg: "#A5B87F" #"#2AE7F1"
+      primary: "#CC88FF"
+      secondary: "#8D9194"
+      bootswatch: "cosmo"
+      base_font:
+        google: Ubuntu
+      heading_font:
+        google: Lato
+      
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+if (requireNamespace("thematic")) 
+  thematic::thematic_rmd(font = "auto")
+```
+
+
+
+          
+      
+# Modeling Basics
+
+Our modeling goal is to predict the sale price of a house based on other information we have, such as its characteristics and location. The dataset is from Ames Housing data. 
+```{r, warning=FALSE, message=FALSE}
+
+library(tidyverse)
+library(modeldata)
+data(ames)
+head(ames)
+```
+
+
+## Exploring Features
+
+Step 1 is exploratory data analysis. Outcome we want to predict is sale price 
+
+```{r, warning=FALSE, message=FALSE}
+library(tidymodels)
+tidymodels_prefer() # handles conflicting pkgs 
+
+ggplot(
+  ames,
+  aes(x= Sale_Price)
+)+
+  geom_histogram(bins = 60, fill='2', color=3)+
+  scale_x_continuous(labels = scales::dollar_format())
+```
+
+
+The plot is right skewed, more homes under $400,000.
+
+```{r}
+min(ames$Sale_Price)
+median(ames$Sale_Price)
+mean(ames$Sale_Price)
+```
+
+It is wise to `log()` transform the data as to ensure our data avoids negative side effects of predictions and makes a robust inference possible.
+
+```{r}
+ggplot(
+  ames,
+  aes(x= Sale_Price)
+)+
+  geom_histogram(bins = 50, fill='2', color=3)+
+  scale_x_continuous(labels = scales::dollar_format())+
+  scale_x_log10()
+```
+
+The units of the model coefficients might be more difficult to interpret, as will measures of performance.  If the sale price is on the log scale, these differences (i.e., the residuals) are also on the log scale. It can be difficult to understand the quality of a model whose RMSE is 0.15 on such a log scale.
+
+Sale prices for this data will be set to log
+```{r}
+ames = ames %>% 
+  mutate(Sale_Price = log10(Sale_Price))
+```
+
+
+
+## Data budget 
+
+A data budget is the amount of data available for various model creation (parameter estimation, selection, tuning, performance assessment). *How should the data be applied to achieve different tasks?*
+
+- allocate specific subset of data (instead of all data for 1 task)
+  - if lots of data and predictors, use subset on determining which predictors are informative before full parameter estimation
+
+
+
+### Train/ Test split - 1
+
+The primary approach for empirical model validation is to split the existing pool of data into two distinct sets, the training set and the test set. 
+
+- training set is majority of data. It is used to do most of the work to develop the model
+- test set, held in reserve until 1 or 2 models have been selected to succeed. look at this test set 1x only! 
+
+80% training / 20% test. use the `rsample::initial_split()`
+
+```{r, message=FALSE, warning=FALSE}
+library(tidymodels)
+tidymodels_prefer() # conflict resolution 
+
+# set seed for reproducibility
+set.seed(501)
+
+# 80/20 split
+ames_split = rsample::initial_split(ames, prop = 0.80)
+ames_split
+
+# --- output
+# training / test / original sample size
+```
+
+
+### Train/ Test split - 2
+
+specifically label what is training and what is test data
+```{r}
+ames_train80 = rsample::training(ames_split)
+ames_test20 = rsample::testing(ames_split)
+
+# show the dimensions (rows, columns)
+dim(ames_train80)
+```
+
+### Train/ Test split - 3
+
+**Classification problem**, when there is a dramatic class imbalance in classification problems, one class occurs much less frequently than another. To avoid this, stratified sampling can be used. The training/test split is conducted separately within each class and then these subsamples are combined into the overall training and test set. 
+
+With the housing data, the histogram is skewed showing more homes less tan $400,000 and splitting the data could reduce the number of more expensive homes in the model (poor modeling). 
+
+```{r}
+set.seed(502)
+
+ames_split = rsample::initial_split(ames, prop = 0.80, strata = Sale_Price)
+
+# train/test
+ames_train80 = rsample::training(ames_split)
+ames_test20 = rsample::testing(ames_split)
+
+# dimensions (rows, columns)
+dim(ames_train80)
+```
+
+
+If working with times series data, use the `rsample::initial_time_split()` with strata 
+
+
+### Multilevel data
+
+This dataset each house is an independent event, other data modeling will be different. Data splitting should occur at the independent experimental unit level of the data. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
