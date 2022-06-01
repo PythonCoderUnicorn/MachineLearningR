@@ -298,7 +298,15 @@ ames_small_test %>%
   bind_cols( predict(tree_fit, ames_small_test))
 ```
 
-..
+
+
+# Workflow ('pipeline')
+
+The workflows package allows the user to bind modeling and preprocessing objects together. Let’s start again with the Ames data and a simple linear model:
+
+```{r}
+
+```
 
 
 
