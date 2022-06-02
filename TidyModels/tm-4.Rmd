@@ -403,6 +403,144 @@ head( collect_predictions(final_lm_res) )
 
 # Recipes - feature engineering
 
+Feature engineering entails reformatting predictor values to make them easier for a model to use effectively. 
+
+- transformations and encodings of the data to best represent their important characteristics. Choose numeric vs categorical feature engineering
+
+- the location of homes:
+
+  - neighborhood (qualitative measure)
+  - long/lat 
+  - distance to nearest school
+
+- preprocessing for better features for modeling 
+
+  - correlation between predictors reduction by removing some predictors
+  - missing values can be imputed
+  - variance type measure benefit from coercing symmetric transformations
+  
+
+
+## recipe - 1
+
+The focus on a small subset of the **predictors** available in the Ames housing data:
+
+- neighborhood (qualitative)
+- gross above grade living area (continuous) `Gr_Liv_Area`
+- the year house was built `Year_built`
+- building type `Bldg_Type` :  `oneFam`, `TwoFmCon`, `Duplex`, `Twnhs` and `TwnhsE`
+  
+```{r recipe 1, message=FALSE, warning=FALSE}
+library(tidymodels) # Includes the recipes package
+tidymodels_prefer()
+
+# recipe 1
+simple_ames.1 = recipe(
+  # add ingredients (predictor variables) to the recipe
+  Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type,
+  data = ames_train80
+) %>% 
+  # log transform the greater living area data
+  step_log(Gr_Liv_Area, base = 10) %>% 
+  # variables to be converted from qualitative format to quantitative => binary
+  # any factored column data (nominal) => binary
+  step_dummy( all_nominal_predictors() )
+
+simple_ames.1
+```
+
+  
+## recipe - 2 (redo workflow)
+
+need to remove variables in order to add preprocessing model
+```{r}
+lm_wflow = lm_wflow %>% 
+  remove_variables() %>% 
+  add_recipe(simple_ames.1)
+
+lm_wflow
+```
+
+## recipe estimation - 3
+
+fit & predict
+
+```{r}
+lm_fit = fit(lm_wflow, ames_train80)
+
+predict(lm_fit, ames_test20) %>% slice(1:3)
+```
+
+
+## recipe extract - 4
+
+```{r}
+# lm_fit %>% 
+#   extract_recipe(estimated = TRUE)
+
+lm_fit %>% 
+  extract_fit_parsnip() %>% 
+  tidy() %>% 
+  head()
+```
+
+
+### model methods 
+
+sections 8.4 to 8.7 talk about various model methods for dealing with unbalanced data etc
+including steps and splines
+
+
+## recipe refactor - 5
+
+```{r}
+# recipe 1
+simple_ames.1 = recipe(
+  # add ingredients (predictor variables) to the recipe
+  Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type,
+  data = ames_train80
+) %>% 
+  # log transform the greater living area data
+  step_log(Gr_Liv_Area, base = 10) %>% 
+  # variables to be converted from qualitative format to quantitative => binary
+  # any factored column data (nominal) => binary
+  step_other(Neighborhood, threshold = 0.01) %>% 
+  step_dummy( all_nominal_predictors() ) %>% 
+  # creates new columns
+  step_interact(~ Gr_Liv_Area : starts_with("Bldg_Type_")) %>% 
+  # creates new columns based on splines 
+  step_ns(Latitude, Longitude, deg_free = 20)
+
+# simple_ames.1
+
+lm_model = linear_reg() %>% 
+  set_engine('lm')
+
+lm_wflow = workflow() %>% 
+  add_model(lm_model) %>% 
+  add_recipe(simple_ames.1)
+
+
+```
+
+
+
+
+
+# Judge model
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
